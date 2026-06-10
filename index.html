@@ -1,0 +1,3020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python vs Java — LeetCode Side-by-Side Cheat Sheet</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<style>
+:root{
+  --bg:#f7f8fa; --panel:#ffffff; --ink:#1f2933; --muted:#647084;
+  --line:#e3e7ee; --accent:#5a55e0; --accent2:#0e9488;
+  --tip-bg:#fff8e6; --tip-line:#f0c64a; --tip-ink:#7a5a00;
+  /* Dracula */
+  --d-bg:#282a36; --d-fg:#f8f8f2; --d-comment:#6272a4; --d-cyan:#8be9fd;
+  --d-green:#50fa7b; --d-orange:#ffb86c; --d-pink:#ff79c6; --d-purple:#bd93f9;
+  --d-red:#ff5555; --d-yellow:#f1fa8c;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  background:var(--bg);color:var(--ink);line-height:1.55;}
+header.top{background:linear-gradient(120deg,#5a55e0,#0e9488);color:#fff;padding:26px 28px;}
+header.top h1{margin:0 0 6px;font-size:24px;letter-spacing:.2px}
+header.top p{margin:0;opacity:.92;font-size:14px}
+.layout{display:flex;align-items:flex-start;max-width:1400px;margin:0 auto}
+nav.side{position:sticky;top:0;align-self:flex-start;width:236px;flex:0 0 236px;height:100vh;overflow-y:auto;
+  padding:18px 14px;border-right:1px solid var(--line);background:var(--panel);}
+nav.side h3{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:16px 8px 6px}
+nav.side a{position:relative;display:block;padding:5px 10px 5px 24px;font-size:13px;color:var(--ink);
+  text-decoration:none;border-radius:6px;border-left:3px solid transparent}
+nav.side a::before{content:"";position:absolute;left:9px;top:50%;transform:translateY(-50%);
+  width:7px;height:7px;border-radius:50%;background:#cbd2dc}
+nav.side a.e::before{background:#2bb673}   /* easy */
+nav.side a.m::before{background:#f0a32a}   /* medium */
+nav.side a.h::before{background:#e0544e}   /* hard */
+nav.side a.r::before{background:#9aa3b0}   /* reference */
+nav.side a:hover{background:#eef0fb;color:var(--accent)}
+nav.side a.active{background:#eaf0ff;color:var(--accent);font-weight:600;border-left:3px solid var(--accent)}
+.legend{display:flex;flex-wrap:wrap;gap:10px;padding:8px 10px 12px;margin-bottom:4px;
+  border-bottom:1px solid var(--line);font-size:11.5px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend i{width:8px;height:8px;border-radius:50%;display:inline-block}
+.legend i.e{background:#2bb673}.legend i.m{background:#f0a32a}
+.legend i.h{background:#e0544e}.legend i.r{background:#9aa3b0}
+main{flex:1;min-width:0;padding:24px 30px 80px}
+section{margin-bottom:34px;scroll-margin-top:14px}
+section h2{font-size:20px;margin:0 0 4px;padding-bottom:8px;border-bottom:2px solid var(--line);color:var(--accent)}
+section .sub{color:var(--muted);font-size:13px;margin:0 0 14px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:14px}
+.col{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.col .lbl{font-size:12px;font-weight:600;letter-spacing:.05em;padding:7px 12px;color:#fff}
+.col.py .lbl{background:#3776ab}
+.col.java .lbl{background:#e76f00}
+pre{margin:0}
+pre code.hljs{display:block;padding:14px 16px;font-size:12.5px;line-height:1.5;
+  font-family:"SF Mono",Menlo,Consolas,"Courier New",monospace;overflow-x:auto;
+  background:var(--d-bg)!important;color:var(--d-fg)!important;}
+.tip{background:var(--tip-bg);border:1px solid var(--tip-line);border-left:4px solid var(--tip-line);
+  color:var(--tip-ink);border-radius:8px;padding:10px 14px;font-size:13px;margin:4px 0 0}
+.tip b{color:#5a4300}
+.why{background:#eef6ff;border:1px solid #cfe3fb;border-left:4px solid #5a93e0;
+  color:#234567;border-radius:8px;padding:11px 15px;font-size:13px;margin:0 0 14px;line-height:1.6}
+.why b{color:#163a5f}
+.why .h{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  color:#2f6ab0;margin-right:8px}
+.cx{width:100%;border-collapse:collapse;font-size:13px;background:var(--panel);
+  border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.cx th,.cx td{padding:8px 12px;text-align:left;border-bottom:1px solid var(--line)}
+.cx th{background:#eef0fb;color:var(--accent);font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+.cx td:first-child{font-weight:600}
+.cx code{background:#eef0f4;padding:1px 5px;border-radius:4px;font-size:12px;
+  font-family:"SF Mono",Menlo,Consolas,monospace;color:#b1004a}
+.cx tr:last-child td{border-bottom:none}
+.note{font-size:12.5px;color:var(--muted);margin:2px 0 10px}
+.full{grid-template-columns:1fr}
+code.inl{background:#eef0f4;padding:1px 5px;border-radius:4px;font-size:12.5px;
+  font-family:"SF Mono",Menlo,Consolas,monospace;color:#b1004a}
+@media(max-width:960px){.row{grid-template-columns:1fr}nav.side{display:none}}
+/* ===== Dracula highlight.js ===== */
+.hljs{background:var(--d-bg);color:var(--d-fg)}
+.hljs-keyword,.hljs-selector-tag,.hljs-literal,.hljs-section,.hljs-link{color:var(--d-pink)}
+.hljs-built_in,.hljs-type,.hljs-class .hljs-title{color:var(--d-cyan)}
+.hljs-string,.hljs-attr,.hljs-attribute,.hljs-regexp{color:var(--d-yellow)}
+.hljs-number,.hljs-symbol,.hljs-bullet,.hljs-meta{color:var(--d-purple)}
+.hljs-title,.hljs-name,.hljs-title.function_{color:var(--d-green)}
+.hljs-comment,.hljs-quote{color:var(--d-comment);font-style:italic}
+.hljs-params{color:var(--d-orange)}
+.hljs-variable,.hljs-template-variable{color:var(--d-fg)}
+.hljs-doctag,.hljs-deletion{color:var(--d-red)}
+.hljs-addition{color:var(--d-green)}
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>Python &harr; Java — LeetCode Side-by-Side Cheat Sheet</h1>
+  <p>The syntax muscle memory to clear most LeetCode problems. Light theme · Dracula code · gotchas for interviews.</p>
+</header>
+<div class="layout">
+<nav class="side">
+  <div class="legend">
+    <span><i class="e"></i>Easy</span>
+    <span><i class="m"></i>Medium</span>
+    <span><i class="h"></i>Hard</span>
+    <span><i class="r"></i>Ref</span>
+  </div>
+  <h3>Start Here</h3>
+  <a href="#imports" class="r">Useful imports</a>
+  <h3>Core Syntax</h3>
+  <a href="#io" class="e">I/O &amp; basics</a>
+  <a href="#types" class="e">Types &amp; vars</a>
+  <a href="#math" class="e">Numbers &amp; math</a>
+  <a href="#strings" class="e">Strings</a>
+  <a href="#chars" class="e">Characters</a>
+  <a href="#lists" class="e">Lists / Arrays</a>
+  <a href="#2d" class="m">2D arrays / grids</a>
+  <a href="#map" class="e">HashMap / Dict</a>
+  <a href="#set" class="e">HashSet / Set</a>
+  <a href="#counter" class="e">Frequency / Counter</a>
+  <a href="#stack" class="m">Stack</a>
+  <a href="#queue" class="m">Queue / Deque</a>
+  <a href="#heap" class="m">Heap / PriorityQueue</a>
+  <a href="#sort" class="e">Sorting &amp; comparators</a>
+  <a href="#iter" class="e">Iteration patterns</a>
+  <a href="#tuple" class="e">Tuples / Pairs</a>
+  <h3>Number / Bit Tricks</h3>
+  <a href="#bits" class="m">Bit manipulation</a>
+  <a href="#numtheory" class="m">Number theory</a>
+  <a href="#matrix" class="m">Matrix transforms</a>
+  <h3>Algorithm Templates</h3>
+  <a href="#binsearch" class="m">Binary search</a>
+  <a href="#twoptr" class="e">Two pointers</a>
+  <a href="#cyclic" class="m">Cyclic sort (1..n)</a>
+  <a href="#window" class="m">Sliding window</a>
+  <a href="#stringalgo" class="m">String algorithms</a>
+  <a href="#prefix" class="m">Prefix sums / diff arrays</a>
+  <a href="#monostack" class="h">Monotonic stack / deque</a>
+  <a href="#intervals" class="m">Intervals &amp; greedy</a>
+  <a href="#bfs" class="m">BFS</a>
+  <a href="#dfs" class="m">DFS</a>
+  <a href="#backtrack" class="m">Backtracking</a>
+  <a href="#dp" class="h">Dynamic programming</a>
+  <a href="#dppatterns" class="h">DP patterns catalog</a>
+  <a href="#segtree" class="h">Segment tree / Fenwick</a>
+  <a href="#quickselect" class="m">Quickselect (k-th)</a>
+  <a href="#uf" class="m">Union-Find</a>
+  <a href="#ll" class="e">Linked list</a>
+  <a href="#tree" class="e">Binary tree</a>
+  <a href="#trie" class="h">Trie</a>
+  <a href="#dijkstra" class="h">Dijkstra</a>
+  <a href="#topo" class="m">Topological sort</a>
+  <h3>Reference</h3>
+  <a href="#complexity" class="r">Complexity tables</a>
+  <a href="#picker" class="r">Which structure?</a>
+  <h3>Must-Know Problems</h3>
+  <a href="#p-twosum" class="e">Two Sum</a>
+  <a href="#p-anagram" class="e">Valid Anagram</a>
+  <a href="#p-stock" class="e">Best Time Buy/Sell Stock</a>
+  <a href="#p-paren" class="e">Valid Parentheses</a>
+  <a href="#p-mergelist" class="e">Merge Two Sorted Lists</a>
+  <a href="#p-kadane" class="m">Maximum Subarray</a>
+  <a href="#p-product" class="m">Product Except Self</a>
+  <a href="#p-lengthsub" class="m">Longest Substring</a>
+  <a href="#p-groupana" class="m">Group Anagrams</a>
+  <a href="#p-topk" class="m">Top K Frequent</a>
+  <a href="#p-islands" class="m">Number of Islands</a>
+  <a href="#p-course" class="m">Course Schedule</a>
+  <a href="#p-coin" class="m">Coin Change</a>
+  <a href="#p-intervals" class="m">Merge Intervals</a>
+  <a href="#p-lru" class="m">LRU Cache</a>
+  <a href="#p-rainwater" class="h">Trapping Rain Water</a>
+  <a href="#p-3sum" class="m">3Sum</a>
+  <a href="#p-rotated" class="m">Search Rotated Array</a>
+  <a href="#p-levelorder" class="m">Binary Tree Level Order</a>
+  <a href="#p-validbst" class="m">Validate BST</a>
+  <a href="#p-clonegraph" class="m">Clone Graph</a>
+  <a href="#p-rob" class="m">House Robber</a>
+  <a href="#p-wordbreak" class="m">Word Break</a>
+  <a href="#p-minstack" class="e">Min Stack</a>
+</nav>
+<main>
+<section id="imports">
+<h2>Useful imports (paste these first)</h2>
+<p class="why"><span class="h">When &amp; why</span>On LeetCode the heavy lifters live in libraries — pull them in before you start typing so you never stall mid-solution. In Python, four imports cover ~90% of problems: <code class="inl">collections</code> (<code class="inl">deque</code> for BFS, <code class="inl">defaultdict</code>/<code class="inl">Counter</code> for grouping &amp; counts), <code class="inl">heapq</code> (priority queues / Dijkstra / top-K), <code class="inl">bisect</code> (binary search on sorted data), and <code class="inl">functools.lru_cache</code> (instant top-down DP). In Java a single <code class="inl">import java.util.*;</code> exposes every collection you need. Keep this list as your blank-editor starting point.</p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">// One star-import covers almost everything:
+import java.util.*;
+//   -> List, ArrayList, LinkedList, Map, HashMap, TreeMap,
+//      Set, HashSet, TreeSet, Deque, ArrayDeque,
+//      PriorityQueue, Queue, Stack, Collections, Arrays,
+//      Comparator, Iterator, Random, Objects
+
+// Streams &amp; functional (occasionally handy):
+import java.util.stream.*;   // IntStream, Collectors
+import java.util.function.*; // Function, BiFunction
+
+// Big numbers when long overflows:
+import java.math.BigInteger;
+import java.math.BigDecimal;
+
+// Most-used static helpers (no import needed, java.lang):
+//   Math.max/min/abs/pow/sqrt, Integer.parseInt,
+//   Integer.MAX_VALUE, Integer.bitCount, Long.MAX_VALUE,
+//   Character.isDigit/isLetter, String.valueOf</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python"># The core four — paste every time:
+from collections import deque, defaultdict, Counter, OrderedDict
+import heapq          # heappush/heappop/heapify, nlargest, nsmallest
+import bisect         # bisect_left, bisect_right, insort
+from functools import lru_cache, cache, reduce, cmp_to_key
+
+# Very common extras:
+import math           # gcd, lcm, inf, isqrt, comb, perm, factorial
+from itertools import (accumulate, permutations, combinations,
+                       product, groupby, chain, pairwise)
+import sys            # sys.setrecursionlimit(10**6), sys.maxsize
+from typing import List, Optional, Dict, Tuple  # LC signatures
+
+# Ordered/sorted structures (available on LeetCode):
+from sortedcontainers import SortedList, SortedDict, SortedSet
+
+# Handy builtins (no import): map, zip, enumerate, sorted,
+#   sum, min, max, abs, divmod, pow(a,b,m), any, all, range</code></pre></div>
+</div>
+<p class="tip"><b>Tip:</b> In Python, raise the recursion limit early (<code class="inl">sys.setrecursionlimit(10**6)</code>) for any deep DFS/recursive DP, and remember <code class="inl">math.inf</code> / <code class="inl">-math.inf</code> as clean sentinels. In Java, <code class="inl">java.lang</code> classes (<code class="inl">Math</code>, <code class="inl">Integer</code>, <code class="inl">String</code>, <code class="inl">Character</code>) need <i>no</i> import — only <code class="inl">java.util.*</code>, <code class="inl">java.math.*</code>, and streams do. Don't reach for <code class="inl">BigInteger</code> unless a value truly exceeds <code class="inl">long</code> (~9.2×10¹⁸).</p>
+</section>
+
+<section id="io">
+<h2>I/O &amp; program skeleton</h2>
+<p class="sub">On LeetCode you fill in a method, but knowing the full skeleton helps for OA / Codeforces-style judges.</p>
+<p class="why"><span class="h">When &amp; why</span>LeetCode hands you a pre-written method signature, so you rarely touch I/O there. But online assessments (HackerRank, Codeforces, company OAs) make you read from stdin and print results yourself — and a slow reader is the #1 cause of "time limit exceeded" on large inputs. Learn the fast-input idiom once: in Java a single <code class="inl">Scanner</code> is fine up to ~10⁵ tokens but use <code class="inl">BufferedReader</code> beyond that; in Python always rebind <code class="inl">input = sys.stdin.readline</code> the moment input size exceeds a few thousand lines.</p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        String s = sc.next();          // one token
+        sc.nextLine();                 // consume newline
+        String line = sc.nextLine();   // whole line
+        System.out.println(n + " " + s);
+    }
+}</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">import sys
+input = sys.stdin.readline   # faster input
+
+def main():
+    n = int(input())
+    s = input().split()[0]       # one token
+    line = input().rstrip("\n")  # whole line
+    print(n, s)
+
+main()</code></pre></div>
+</div>
+<p class="tip"><b>Tip:</b> In Java, mixing <code class="inl">nextInt()</code> then <code class="inl">nextLine()</code> leaves a dangling newline — call an extra <code class="inl">nextLine()</code>. In Python, default <code class="inl">input()</code> is slow for big inputs; rebinding to <code class="inl">sys.stdin.readline</code> is the classic speed fix.</p>
+</section>
+
+<section id="types">
+<h2>Types &amp; variables</h2>
+<p class="sub">Java is statically typed; Python is dynamic. Watch integer ranges.</p>
+<p class="why"><span class="h">When &amp; why</span>The single most important thing to internalize when moving between these languages for interviews is <b>integer range</b>. Java's <code class="inl">int</code> caps at ~2.1×10⁹; any sum, product, or hash that can exceed that must be a <code class="inl">long</code>, or you get silent wrong answers that are brutal to debug. Python integers grow without bound, so problems that are "tricky" in Java (factorials, big powers, prefix-sum overflow) are non-issues. The flip side: Python's flexibility costs speed, so for tight time limits Java's fixed-width primitives and arrays are genuinely faster.</p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">int a = 5;            // 32-bit, ~2.1e9 max
+long big = 10_000_000_000L;   // use long for big sums
+double d = 3.14;
+char c = 'a';
+boolean flag = true;
+String s = "hi";
+int[] arr = new int[n];       // defaults to 0
+var list = new ArrayList&lt;Integer&gt;();  // local type inference</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">a = 5                 # arbitrary precision int (no overflow)
+big = 10_000_000_000
+d = 3.14
+c = 'a'               # just a length-1 string
+flag = True
+s = "hi"
+arr = [0] * n         # list of zeros
+lst = []</code></pre></div>
+</div>
+<p class="tip"><b>Gotcha:</b> Java <code class="inl">int</code> overflows silently at ~2.1×10⁹ — for sums/products use <code class="inl">long</code>. Python ints never overflow, so a problem that's "hard" in Java because of overflow is trivial in Python.</p>
+</section>
+
+<section id="math">
+<h2>Numbers &amp; math</h2>
+<p class="why"><span class="h">When &amp; why</span>You reach for these constantly: <code class="inl">min/max</code> in DP transitions, <code class="inl">abs</code> for distances, bit ops for subsets and parity, and "infinity" sentinels to initialize best-so-far values. The two traps that sink interviews are <b>division/modulo on negatives</b> (the languages disagree — see the tip below) and choosing the right "infinity": use <code class="inl">Integer.MAX_VALUE</code>/<code class="inl">float('inf')</code> so that <code class="inl">dist[u] + w</code> comparisons behave, but in Java guard against overflow when you add to <code class="inl">MAX_VALUE</code>. Bit shifts (<code class="inl">1 &lt;&lt; k</code>) are the backbone of subset enumeration and bitmask DP.</p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">Math.max(a, b); Math.min(a, b);
+Math.abs(x); Math.pow(2, 10);  // returns double
+(int) Math.sqrt(n);
+Math.floorDiv(-7, 2);   // -4 (floor)
+-7 / 2;                 // -3 (truncates toward 0)
+-7 % 2;                 // -1 (sign follows dividend)
+Math.floorMod(-7, 2);   // 1  (always non-negative)
+Integer.MAX_VALUE; Integer.MIN_VALUE;
+Long.MAX_VALUE;
+Integer.bitCount(x);    // popcount
+1 &lt;&lt; k; x &gt;&gt; 1; x &amp; 1;</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">max(a, b); min(a, b)
+abs(x); 2 ** 10          # exact int
+int(n ** 0.5)            # or math.isqrt(n)
+-7 // 2                  # -4 (floor division)
+-7 / 2                   # -3.5 (true division -> float)
+-7 % 2                   # 1  (sign follows divisor)
+import math; math.inf    # +infinity
+float('inf'); float('-inf')
+bin(x).count('1')        # popcount; or x.bit_count()
+1 &lt;&lt; k; x &gt;&gt; 1; x &amp; 1</code></pre></div>
+</div>
+<p class="tip"><b>Key difference — division &amp; modulo:</b> Python <code class="inl">//</code> and <code class="inl">%</code> floor toward negative infinity (so <code class="inl">-7 % 2 == 1</code>). Java <code class="inl">/</code> and <code class="inl">%</code> truncate toward zero (so <code class="inl">-7 % 2 == -1</code>). For wrap-around indices with negatives, use Python <code class="inl">%</code> directly, but in Java use <code class="inl">Math.floorMod</code>. For "infinity" sentinels use <code class="inl">Integer.MAX_VALUE</code> / <code class="inl">float('inf')</code>.</p>
+</section>
+
+<section id="strings">
+<h2>Strings</h2>
+<p class="sub">Both are immutable. Build with StringBuilder / list-join for O(n).</p>
+<p class="why"><span class="h">When &amp; why</span>Strings are immutable in both languages, which has one massive performance implication: <b>concatenating in a loop with <code class="inl">+</code> is O(n²)</b> because each <code class="inl">+</code> copies the whole string so far. Any time you build output character-by-character — reversing, decoding, joining tokens — accumulate into a <code class="inl">StringBuilder</code> (Java) or a <code class="inl">list</code> then <code class="inl">"".join()</code> (Python). Use this section's slicing and search methods for parsing problems, and remember a string is essentially a read-only char array you can index and compare.</p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">String s = "hello";
+s.length();
+s.charAt(i);
+s.substring(1, 4);        // [1,4)
+s.indexOf("ll");          // -1 if absent
+s.contains("ell");
+s.equals("hello");        // NEVER use == for content
+s.compareTo("abc");
+s.toCharArray();
+s.split(",");             // regex!  split("\\.") for dot
+String.join(",", list);
+s.toLowerCase(); s.trim();
+s.replace("l", "L");
+
+// Build strings efficiently:
+StringBuilder sb = new StringBuilder();
+sb.append('a').append(123);
+sb.reverse();
+sb.deleteCharAt(sb.length()-1);
+String out = sb.toString();</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">s = "hello"
+len(s)
+s[i]
+s[1:4]                    # [1,4)
+s.find("ll")              # -1 if absent
+"ell" in s
+s == "hello"              # value compare is fine
+(s &gt; "abc") - (s &lt; "abc") # compareTo-style
+list(s)
+s.split(",")              # literal, not regex
+",".join(lst)
+s.lower(); s.strip()
+s.replace("l", "L")
+
+# Build strings efficiently:
+parts = []
+parts.append('a'); parts.append(str(123))
+s[::-1]                   # reverse
+out = "".join(parts)</code></pre></div>
+</div>
+<p class="tip"><b>Gotcha:</b> In Java, <code class="inl">==</code> on Strings compares references, not content — always use <code class="inl">.equals()</code>. <code class="inl">split()</code> in Java takes a <i>regex</i>, so splitting on <code class="inl">.</code> or <code class="inl">|</code> needs escaping (<code class="inl">"\\."</code>). Building a string with <code class="inl">+</code> in a loop is O(n²) in both — use <code class="inl">StringBuilder</code> / <code class="inl">"".join()</code>.</p>
+</section>
+
+<section id="chars">
+<h2>Characters</h2>
+<p class="why"><span class="h">When &amp; why</span>Character arithmetic is the trick that makes string problems fast. Mapping a letter to an index with <code class="inl">c - 'a'</code> lets you use a tiny fixed-size <code class="inl">int[26]</code> array instead of a hash map — faster, and it makes anagram/frequency comparisons a single array equality check. Use the <code class="inl">isDigit/isLetter</code> family for tokenizers and "valid palindrome / parse expression" problems. Note the conceptual gap: Java has a true <code class="inl">char</code> primitive (an integer code unit), while in Python a "character" is just a length-1 string, so you go through <code class="inl">ord()</code>/<code class="inl">chr()</code> instead of implicit int conversion.</p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">char c = 'a';
+int v = c - 'a';          // 0..25 index
+char back = (char)('a' + v);
+Character.isDigit(c);
+Character.isLetter(c);
+Character.isLetterOrDigit(c);
+Character.isUpperCase(c);
+Character.toLowerCase(c);
+int d = c - '0';          // char digit -> int
+int[] freq = new int[26];
+freq[c - 'a']++;</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">c = 'a'
+v = ord(c) - ord('a')     # 0..25 index
+back = chr(ord('a') + v)
+c.isdigit()
+c.isalpha()
+c.isalnum()
+c.isupper()
+c.lower()
+d = int(c)                # or ord(c) - ord('0')
+freq = [0] * 26
+freq[ord(c) - ord('a')] += 1</code></pre></div>
+</div>
+<p class="tip"><b>Tip:</b> The <code class="inl">c - 'a'</code> / <code class="inl">ord(c) - ord('a')</code> trick to map letters to 0–25 array indices is one of the most-used patterns in string problems (anagrams, frequency counts).</p>
+</section>
+
+<section id="lists">
+<h2>Lists / Dynamic arrays</h2>
+<p class="why"><span class="h">When &amp; why</span>This is your default container — a resizable, index-addressable sequence backed by a contiguous array, so random access and append-at-end are O(1) (amortized), but inserting/removing at the front or middle is O(n) because everything shifts. Reach for it whenever order matters and you mostly index or append. If you find yourself repeatedly removing from the front, that's a signal to switch to a deque/queue. Java distinguishes a fixed primitive <code class="inl">int[]</code> (fastest, known size) from a growable <code class="inl">ArrayList&lt;Integer&gt;</code> (boxed, flexible); Python's <code class="inl">list</code> is one type that does both jobs.</p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">List&lt;Integer&gt; a = new ArrayList&lt;&gt;();
+a.add(5);                 // push back
+a.add(0, 9);              // insert at index
+a.get(i);
+a.set(i, 7);
+a.remove(i);              // by INDEX (int)
+a.remove(Integer.valueOf(5)); // by VALUE
+a.size();
+a.contains(5);            // O(n)
+a.isEmpty();
+Collections.reverse(a);
+Collections.sort(a);
+int[] arr = {3,1,2};
+Arrays.sort(arr);
+int n = arr.length;       // field, no ()
+Arrays.fill(arr, -1);
+int[] copy = arr.clone();
+List&lt;Integer&gt; l = Arrays.asList(1,2,3);</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">a = []
+a.append(5)               # push back
+a.insert(0, 9)            # insert at index
+a[i]
+a[i] = 7
+del a[i]                  # by index
+a.remove(5)               # by value (first match)
+len(a)
+5 in a                    # O(n)
+not a                     # is empty
+a.reverse()
+a.sort()
+arr = [3,1,2]
+arr.sort()
+n = len(arr)
+arr = [-1] * n            # fill
+copy = arr[:]             # or list(arr)
+a.pop()                   # remove & return last
+a[-1]                     # last element</code></pre></div>
+</div>
+<p class="tip"><b>Gotcha:</b> Java's <code class="inl">list.remove(int)</code> removes by <i>index</i>; to remove by value box it with <code class="inl">Integer.valueOf(x)</code>. Use <code class="inl">arr.length</code> (no parens) for arrays but <code class="inl">list.size()</code> for collections. Python's negative indexing (<code class="inl">a[-1]</code>) and slicing have no direct Java equivalent.</p>
+</section>
+
+<section id="2d">
+<h2>2D arrays / grids</h2>
+<p class="why"><span class="h">When &amp; why</span>Grids appear in a huge fraction of problems — islands, maze/shortest-path, matrix DP, game boards. The reusable muscle memory here is the <b>4-direction (or 8-direction) neighbor loop</b> plus an in-bounds check; you'll write it dozens of times, so memorize the <code class="inl">DIRS</code> array pattern. Pair it with a <code class="inl">visited</code> matrix (or mutate the grid in place) for BFS/DFS traversals. The dimensions convention <code class="inl">grid[row][col]</code> with <code class="inl">R=len(grid)</code>, <code class="inl">C=len(grid[0])</code> is near-universal — keep it consistent to avoid transposition bugs.</p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">int[][] g = new int[rows][cols];   // zero-filled
+g[r][c] = 1;
+int R = g.length, C = g[0].length;
+int[][] dp = new int[n][m];
+boolean[][] seen = new boolean[R][C];
+
+// 4-directional neighbors:
+int[][] DIRS = {{0,1},{0,-1},{1,0},{-1,0}};
+for (int[] d : DIRS) {
+    int nr = r + d[0], nc = c + d[1];
+    if (nr&gt;=0 &amp;&amp; nr&lt;R &amp;&amp; nc&gt;=0 &amp;&amp; nc&lt;C) { /* ... */ }
+}
+// ragged copy:
+int[][] copy = new int[R][];
+for (int i=0;i&lt;R;i++) copy[i]=g[i].clone();</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">g = [[0]*cols for _ in range(rows)]   # zero-filled
+g[r][c] = 1
+R, C = len(g), len(g[0])
+dp = [[0]*m for _ in range(n)]
+seen = [[False]*C for _ in range(R)]
+
+# 4-directional neighbors:
+DIRS = [(0,1),(0,-1),(1,0),(-1,0)]
+for dr, dc in DIRS:
+    nr, nc = r + dr, c + dc
+    if 0 &lt;= nr &lt; R and 0 &lt;= nc &lt; C:
+        pass  # ...
+
+# deep-ish copy:
+copy = [row[:] for row in g]</code></pre></div>
+</div>
+<p class="tip"><b>Critical Python gotcha:</b> Never write <code class="inl">[[0]*C]*R</code> — that makes R references to the <i>same</i> inner list, so editing one row edits all. Always use the comprehension <code class="inl">[[0]*C for _ in range(R)]</code>. Chained comparison <code class="inl">0 &lt;= nr &lt; R</code> is a clean Python-only bounds check.</p>
+</section>
+
+<section id="map">
+<h2>HashMap / Dictionary</h2>
+<p class="why"><span class="h">When &amp; why</span>The hash map is the workhorse that turns O(n²) brute force into O(n): any time the question is "have I seen this value / what's its count / where did it last appear," a map gives O(1) average lookup. Two Sum, group-anagrams, longest-substring, prefix-sum-equals-k — all hinge on it. Use a plain <code class="inl">HashMap</code>/<code class="inl">dict</code> when you only need membership and counts. Step up to a <b>TreeMap</b>/sorted structure only when you also need ordered iteration or floor/ceiling queries (e.g. "nearest smaller key"), since that costs O(log n) per op instead of O(1).</p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">Map&lt;String,Integer&gt; m = new HashMap&lt;&gt;();
+m.put("a", 1);
+m.get("a");                  // null if absent
+m.getOrDefault("a", 0);
+m.containsKey("a");
+m.merge("a", 1, Integer::sum);   // counter idiom
+m.put("a", m.getOrDefault("a",0)+1);
+m.remove("a");
+m.size();
+for (var e : m.entrySet())
+    e.getKey(); e.getValue();
+for (String k : m.keySet()) {}
+for (int v : m.values()) {}
+m.computeIfAbsent(k, x -&gt; new ArrayList&lt;&gt;()).add(v);
+// ordered:
+TreeMap&lt;Integer,Integer&gt; tm = new TreeMap&lt;&gt;();
+tm.firstKey(); tm.lastKey();
+tm.floorKey(x); tm.ceilingKey(x);</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">m = {}
+m["a"] = 1
+m.get("a")                   # None if absent
+m.get("a", 0)
+"a" in m
+m["a"] = m.get("a", 0) + 1   # counter idiom
+
+del m["a"]
+len(m)
+for k, v in m.items():
+    pass
+for k in m: pass             # keys
+for v in m.values(): pass
+
+from collections import defaultdict
+g = defaultdict(list)
+g[k].append(v)
+# ordered keys: use sorted(m) or
+import sortedcontainers      # SortedDict (LC has it)
+# bisect on sorted key list for floor/ceiling</code></pre></div>
+</div>
+<p class="tip"><b>Tip:</b> Java's <code class="inl">merge(k, 1, Integer::sum)</code> and <code class="inl">computeIfAbsent</code> mirror Python's <code class="inl">Counter</code> and <code class="inl">defaultdict</code>. Need sorted keys / floor-ceiling lookups? Java has <code class="inl">TreeMap</code> built in; in Python reach for <code class="inl">sortedcontainers.SortedDict</code> (available on LeetCode) or <code class="inl">bisect</code>.</p>
+</section>
+
+<section id="set">
+<h2>HashSet / Set</h2>
+<p class="why"><span class="h">When &amp; why</span>A set is a hash map without values — use it purely for <b>membership</b>: "is this in the visited set," "are there duplicates," "what's the intersection of two groups." O(1) average add/contains. Classic uses: detect a cycle by tracking seen nodes, dedupe results, and the longest-consecutive-sequence trick (put everything in a set, then only start counting from numbers whose predecessor is absent). When you also need sorted order or floor/ceiling, switch to <code class="inl">TreeSet</code> (Java) or <code class="inl">SortedList</code> (Python's sortedcontainers).</p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">Set&lt;Integer&gt; s = new HashSet&lt;&gt;();
+s.add(5);
+s.contains(5);
+s.remove(5);
+s.size();
+s.addAll(other);            // union (in place)
+s.retainAll(other);         // intersection
+s.removeAll(other);         // difference
+// sorted set:
+TreeSet&lt;Integer&gt; ts = new TreeSet&lt;&gt;();
+ts.first(); ts.last();
+ts.floor(x); ts.ceiling(x);</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">s = set()
+s.add(5)
+5 in s
+s.discard(5)                # no error if absent
+len(s)
+s |= other                  # union
+s &amp;= other                  # intersection
+s -= other                  # difference
+a | b, a &amp; b, a - b, a ^ b   # set algebra
+seen = {1, 2, 3}            # set literal
+# no built-in sorted set; use sortedcontainers.SortedList</code></pre></div>
+</div>
+<p class="tip"><b>Tip:</b> Python set operators (<code class="inl">| &amp; - ^</code>) make union/intersection/difference one-liners. Note <code class="inl">{}</code> is an empty <i>dict</i>, not a set — use <code class="inl">set()</code>. For ordered/floor-ceiling needs, Java's <code class="inl">TreeSet</code> is built in; Python uses <code class="inl">sortedcontainers.SortedList</code>.</p>
+</section>
+
+<section id="counter">
+<h2>Frequency counting / Counter</h2>
+<p class="why"><span class="h">When &amp; why</span>"Counting how many of each" is its own micro-pattern that shows up in anagrams, "can you rearrange to form X," top-K frequent elements, and sliding-window-with-character-budget problems. For lowercase letters or a small fixed alphabet, an <code class="inl">int[26]</code> is both fastest and lets you compare two windows with one array-equality check. For arbitrary keys, Python's <code class="inl">Counter</code> bundles construction, <code class="inl">most_common</code>, and multiset arithmetic; Java leans on <code class="inl">map.merge(k,1,Integer::sum)</code>. The interview insight: comparing whole frequency tables is how you check anagrams in O(n) instead of sorting in O(n log n).</p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">Map&lt;Character,Integer&gt; cnt = new HashMap&lt;&gt;();
+for (char c : s.toCharArray())
+    cnt.merge(c, 1, Integer::sum);
+
+// fixed-alphabet fast path:
+int[] freq = new int[26];
+for (char c : s.toCharArray()) freq[c-'a']++;
+
+// compare two frequency arrays (anagram):
+Arrays.equals(freqA, freqB);</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">from collections import Counter
+cnt = Counter(s)              # whole string at once
+cnt['a']                      # 0 if absent (no KeyError)
+cnt.most_common(2)            # top-2 (val, count)
+cnt - Counter(t)              # multiset subtract
+sum(cnt.values())
+
+# anagram check in one line:
+Counter(s) == Counter(t)</code></pre></div>
+</div>
+<p class="tip"><b>Tip:</b> Python's <code class="inl">Counter</code> is a Swiss-army knife: construct from any iterable, <code class="inl">most_common()</code>, arithmetic between counters, and equality for anagram checks. Java has no direct equivalent — the <code class="inl">int[26]</code> frequency array is both the idiom and the faster choice for lowercase-letter problems.</p>
+</section>
+<section id="stack">
+<h2>Stack (LIFO)</h2>
+<p class="why"><span class="h">When &amp; why</span>Reach for a stack whenever the problem has <b>nesting or "most recent unmatched" structure</b>: valid parentheses, evaluate an expression, decode nested strings, simplify a Unix path, or simulate function-call/backtracking iteratively. The mental cue is "I need to remember things and undo them in reverse order." It's also the engine behind the monotonic-stack pattern (its own section below). O(1) push/pop/peek.</p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">// Prefer Deque over the legacy Stack class:
+Deque&lt;Integer&gt; st = new ArrayDeque&lt;&gt;();
+st.push(1);     // add to head
+st.push(2);
+st.peek();      // 2  (top, null if empty)
+st.pop();       // 2  (remove top)
+st.isEmpty();
+st.size();</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python"># a plain list IS a stack:
+st = []
+st.append(1)    # push
+st.append(2)
+st[-1]          # peek top (IndexError if empty)
+st.pop()        # remove & return top
+not st          # is empty
+len(st)</code></pre></div>
+</div>
+<p class="tip"><b>Tip:</b> In Java avoid the old <code class="inl">java.util.Stack</code> (synchronized, slow) — use <code class="inl">ArrayDeque</code> as a stack. In Python a list's <code class="inl">append</code>/<code class="inl">pop</code> at the end are O(1) and serve as the canonical stack. Always guard <code class="inl">pop()</code>/<code class="inl">peek()</code> against empty.</p>
+</section>
+
+<section id="queue">
+<h2>Queue / Deque (FIFO &amp; double-ended)</h2>
+<p class="why"><span class="h">When &amp; why</span>A queue processes things in arrival order — its defining use is <b>BFS</b>, where FIFO ordering is exactly what guarantees you explore the graph level by level (and therefore find shortest paths in unweighted graphs). A double-ended queue (deque) adds O(1) operations at <i>both</i> ends, which unlocks the sliding-window-maximum trick (monotonic deque) and any "add/remove from either side" simulation. The non-negotiable rule: for queue behavior use <code class="inl">ArrayDeque</code> / <code class="inl">collections.deque</code> — never <code class="inl">list.pop(0)</code>, which is O(n).</p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">Deque&lt;Integer&gt; q = new ArrayDeque&lt;&gt;();
+q.offer(1);        // add to tail (enqueue)
+q.offerFirst(0);   // add to head
+q.peek();          // head
+q.peekLast();      // tail
+q.poll();          // remove head (dequeue)
+q.pollLast();      // remove tail
+q.isEmpty();
+q.size();
+// classic BFS loop:
+while (!q.isEmpty()) {
+    int cur = q.poll();
+    // process, then q.offer(next);
+}</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">from collections import deque
+q = deque()
+q.append(1)        # add to tail (enqueue)
+q.appendleft(0)    # add to head
+q[0]               # head
+q[-1]              # tail
+q.popleft()        # remove head (dequeue) O(1)
+q.pop()            # remove tail
+not q              # is empty
+len(q)
+# classic BFS loop:
+while q:
+    cur = q.popleft()
+    # process, then q.append(next)</code></pre></div>
+</div>
+<p class="tip"><b>Gotcha:</b> Never use a Python <code class="inl">list</code> as a queue — <code class="inl">list.pop(0)</code> is O(n). Always use <code class="inl">collections.deque</code> for BFS. In Java, <code class="inl">ArrayDeque</code> covers both stack and queue roles; don't use <code class="inl">LinkedList</code> unless you need indexed list ops.</p>
+</section>
+
+<section id="heap">
+<h2>Heap / PriorityQueue</h2>
+<p class="sub">Both are <b>min-heaps</b> by default.</p>
+<p class="why"><span class="h">When &amp; why</span>A heap gives you the smallest (or largest) element in O(1) and insert/extract in O(log n) — without keeping everything fully sorted. Reach for it whenever you repeatedly need "the current best": <b>top-K</b> problems (keep a size-K heap, O(n log k)), merge K sorted lists, the running median (two heaps), task scheduling, and <b>Dijkstra/Prim</b> where you always pull the closest frontier node. The decision rule vs. sorting: if you need the extreme element <i>repeatedly as data changes</i>, heap; if you need everything ordered <i>once</i>, just sort.</p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">PriorityQueue&lt;Integer&gt; pq = new PriorityQueue&lt;&gt;();   // min
+pq.offer(3); pq.offer(1);
+pq.peek();      // smallest
+pq.poll();      // remove smallest
+pq.size();
+
+// MAX-heap:
+PriorityQueue&lt;Integer&gt; mx =
+    new PriorityQueue&lt;&gt;(Collections.reverseOrder());
+
+// heap of pairs by 2nd field, then 1st:
+PriorityQueue&lt;int[]&gt; h = new PriorityQueue&lt;&gt;(
+    (a,b) -&gt; a[1]!=b[1] ? a[1]-b[1] : a[0]-b[0]);
+h.offer(new int[]{node, dist});</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">import heapq
+pq = []
+heapq.heappush(pq, 3); heapq.heappush(pq, 1)
+pq[0]               # smallest (peek)
+heapq.heappop(pq)   # remove smallest
+len(pq)
+heapq.heapify(arr)  # O(n) build in place
+
+# MAX-heap: push negatives
+heapq.heappush(pq, -x); -heapq.heappop(pq)
+
+# heap of tuples: sorts by 1st, then 2nd, ...
+heapq.heappush(pq, (dist, node))
+d, node = heapq.heappop(pq)
+
+# k largest / smallest helpers:
+heapq.nlargest(k, nums); heapq.nsmallest(k, nums)</code></pre></div>
+</div>
+<p class="tip"><b>Tip:</b> For a max-heap, Java takes a comparator (<code class="inl">Collections.reverseOrder()</code>); Python has no max-heap, so push <code class="inl">-x</code> and negate on pop. Python tuples in a heap compare element-by-element automatically — perfect for Dijkstra's <code class="inl">(dist, node)</code>. In Java use <code class="inl">int[]</code> with a custom comparator.</p>
+</section>
+
+<section id="sort">
+<h2>Sorting &amp; comparators</h2>
+<p class="why"><span class="h">When &amp; why</span>Sorting is the cheapest way to expose structure: it's the setup step for two-pointer, greedy-interval, and binary-search-on-data solutions, costing O(n log n). The skill that actually gets tested is writing a <b>custom comparator</b> — sort intervals by start, sort people by age then name, sort by frequency descending. Master the multi-key form (Java's <code class="inl">thenComparing</code>, Python's tuple key <code class="inl">(a, b)</code>) and the descending trick (negate a numeric key in Python; <code class="inl">.reversed()</code> in Java). Both sorts are <b>stable</b>, which matters when ties must preserve input order.</p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">Arrays.sort(arr);                 // primitives, asc
+Collections.sort(list);
+list.sort(Comparator.naturalOrder());
+list.sort(Comparator.reverseOrder());
+
+// by key:
+people.sort(Comparator.comparingInt(p -&gt; p.age));
+// descending by key:
+people.sort(Comparator.comparingInt((P p)-&gt;p.age).reversed());
+// multi-key: age asc, then name asc:
+people.sort(Comparator.comparingInt((P p)-&gt;p.age)
+                      .thenComparing(p -&gt; p.name));
+// 2D array by column 0:
+Arrays.sort(intervals, (a,b) -&gt; a[0]-b[0]);
+// safe for big ints (avoid overflow):
+Arrays.sort(intervals, (a,b) -&gt; Integer.compare(a[0],b[0]));</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">arr.sort()                        # in place, asc
+arr.sort(reverse=True)            # desc
+s = sorted(arr)                   # returns new list
+
+# by key:
+people.sort(key=lambda p: p.age)
+# descending by key:
+people.sort(key=lambda p: p.age, reverse=True)
+# multi-key: age asc, then name asc:
+people.sort(key=lambda p: (p.age, p.name))
+# mixed direction: age asc, score desc:
+people.sort(key=lambda p: (p.age, -p.score))
+# 2D list by column 0:
+intervals.sort(key=lambda x: x[0])</code></pre></div>
+</div>
+<p class="tip"><b>Gotcha:</b> In a Java comparator, <code class="inl">a[0]-b[0]</code> can overflow with large/negative values — prefer <code class="inl">Integer.compare(a[0],b[0])</code>. Python's tuple keys make multi-criteria sorts trivial; to mix ascending/descending on numeric fields, negate the descending key (<code class="inl">-p.score</code>). Both sorts are stable.</p>
+</section>
+
+<section id="iter">
+<h2>Iteration patterns</h2>
+<p class="why"><span class="h">When &amp; why</span>Clean iteration prevents off-by-one and index bugs — the silent killers in interviews. Use <code class="inl">enumerate</code> when you need both index and value, <code class="inl">zip</code> to walk two arrays in lockstep (e.g. comparing or combining parallel lists), and reverse ranges for right-to-left DP or "build answer from the end" problems. Python's comprehensions and generator expressions let you express a filter-map-reduce in one readable line and run fast in C; Java's equivalent is the Streams API, but explicit loops are usually clearer and faster for interview-sized inputs.</p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">for (int i = 0; i &lt; n; i++) {}
+for (int i = n - 1; i &gt;= 0; i--) {}   // reverse
+for (int x : arr) {}                  // for-each
+for (int v : list) {}
+
+// index + value:
+for (int i = 0; i &lt; list.size(); i++) {
+    int v = list.get(i);
+}
+// two arrays together:
+for (int i = 0; i &lt; a.length; i++) {
+    use(a[i], b[i]);
+}
+// range with step:
+for (int i = 0; i &lt; n; i += 2) {}</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">for i in range(n): pass
+for i in range(n-1, -1, -1): pass     # reverse
+for x in arr: pass                    # for-each
+
+# index + value:
+for i, v in enumerate(list): pass
+for i, v in enumerate(list, start=1): pass
+
+# two iterables together:
+for x, y in zip(a, b):
+    use(x, y)
+
+# range with step:
+for i in range(0, n, 2): pass
+
+# comprehensions:
+squares = [x*x for x in nums if x &gt; 0]
+total = sum(1 for x in nums if x == t)</code></pre></div>
+</div>
+<p class="tip"><b>Tip:</b> Python's <code class="inl">enumerate</code> and <code class="inl">zip</code> remove most index bookkeeping. <code class="inl">range(start, stop, step)</code> handles reverse loops (<code class="inl">range(n-1, -1, -1)</code>). Comprehensions and generator expressions (<code class="inl">sum(... for ...)</code>) are idiomatic and fast — there's no concise Java equivalent (streams are the closest).</p>
+</section>
+
+<section id="tuple">
+<h2>Tuples / Pairs &amp; multiple return</h2>
+<p class="why"><span class="h">When &amp; why</span>You constantly need to bundle 2–3 values: a grid coordinate <code class="inl">(row, col)</code>, a heap entry <code class="inl">(dist, node)</code>, or "return the index <i>and</i> the value." Python tuples do this natively and — crucially — are <b>hashable</b>, so <code class="inl">(r, c)</code> drops straight into a visited <code class="inl">set</code> or as a <code class="inl">dict</code> key. Java has no tuple: use a small <code class="inl">int[]</code> or a <code class="inl">record</code>, and for a hashable grid key encode the pair as <code class="inl">r * COLS + c</code>. This single difference makes a lot of Python graph/grid code dramatically shorter.</p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">// no native tuple; common options:
+int[] pair = {r, c};               // lightweight pair
+int[] triple = {x, y, z};
+
+// return multiple values -&gt; small class or array:
+int[] res = solve();
+int a = res[0], b = res[1];
+
+// record (Java 16+) for readable structs:
+record Pair(int r, int c) {}
+Pair p = new Pair(1, 2);
+p.r(); p.c();
+
+// swap:
+int tmp = a; a = b; b = tmp;</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">pair = (r, c)                      # native tuple
+triple = (x, y, z)
+
+# unpack / multiple return:
+def solve(): return a, b
+a, b = solve()
+
+# tuples as dict keys / set members (hashable):
+seen = set()
+seen.add((r, c))
+dp[(i, j)] = val
+
+# swap (no temp):
+a, b = b, a
+
+# star-unpack:
+first, *rest = [1, 2, 3, 4]</code></pre></div>
+</div>
+<p class="tip"><b>Tip:</b> Python tuples are hashable, so <code class="inl">(r, c)</code> works directly as a set member or dict key for visited-cell tracking — extremely handy in grid problems. Java has no tuple; use <code class="inl">int[]</code>, a <code class="inl">record</code>, or encode <code class="inl">(r, c)</code> as <code class="inl">r * COLS + c</code> for a hashable key. Python's tuple-swap <code class="inl">a, b = b, a</code> needs no temp variable.</p>
+</section>
+<section id="bits">
+<h2>Bit manipulation</h2>
+<p class="why"><span class="h">When &amp; why</span>Bit tricks give O(1) set operations and constant-factor speedups. Core uses: <b>parity/flags</b> (<code class="inl">x &amp; 1</code>), <b>subset enumeration</b> via bitmasks (iterate <code class="inl">0..(1&lt;&lt;n)-1</code>, each integer is a subset — the basis of bitmask DP like traveling-salesman and "partition to k equal subsets"), and classic puzzles: single-number (XOR cancels pairs), counting bits, power-of-two check (<code class="inl">x &amp; (x-1) == 0</code>), and "get/set/clear bit i." XOR's self-inverse property (<code class="inl">a ^ a = 0</code>) is the trick behind many "find the unique element" problems.</p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">x &amp; 1                       // 1 if odd
+x &gt;&gt; 1; x &lt;&lt; 1;             // divide / multiply by 2
+x &amp; (1 &lt;&lt; i)                // test bit i (0 or !=0)
+x | (1 &lt;&lt; i)                // set bit i
+x &amp; ~(1 &lt;&lt; i)              // clear bit i
+x ^ (1 &lt;&lt; i)                // toggle bit i
+x &amp; (x - 1)                 // drop lowest set bit
+x &amp; (-x)                    // isolate lowest set bit
+(x &amp; (x - 1)) == 0          // power of two? (x&gt;0)
+Integer.bitCount(x);        // popcount
+Integer.numberOfLeadingZeros(x);
+Integer.highestOneBit(x);
+// XOR trick: unique element among pairs
+int u = 0; for (int v : nums) u ^= v;
+// enumerate all subsets of n items:
+for (int mask = 0; mask &lt; (1 &lt;&lt; n); mask++)
+    for (int i = 0; i &lt; n; i++)
+        if ((mask &amp; (1 &lt;&lt; i)) != 0) { /* i in subset */ }</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">x &amp; 1                       # 1 if odd
+x &gt;&gt; 1; x &lt;&lt; 1               # divide / multiply by 2
+x &amp; (1 &lt;&lt; i)                # test bit i
+x | (1 &lt;&lt; i)                # set bit i
+x &amp; ~(1 &lt;&lt; i)               # clear bit i
+x ^ (1 &lt;&lt; i)                # toggle bit i
+x &amp; (x - 1)                 # drop lowest set bit
+x &amp; (-x)                    # isolate lowest set bit
+x &gt; 0 and x &amp; (x - 1) == 0  # power of two?
+bin(x).count('1')           # popcount (or x.bit_count())
+x.bit_length()              # # of bits
+
+# XOR trick: unique element among pairs
+u = 0
+for v in nums: u ^= v
+# enumerate all subsets of n items:
+for mask in range(1 &lt;&lt; n):
+    for i in range(n):
+        if mask &amp; (1 &lt;&lt; i):   # i in subset
+            pass</code></pre></div>
+</div>
+<p class="tip"><b>Gotcha:</b> Java <code class="inl">int</code> is 32-bit and right-shift <code class="inl">&gt;&gt;</code> is sign-extending — use <code class="inl">&gt;&gt;&gt;</code> for unsigned/logical shift (e.g. processing bits of a possibly-negative number). Python ints are unbounded and use two's-complement conceptually with infinite sign bits, so masking with <code class="inl">&amp; 0xFFFFFFFF</code> is sometimes needed to emulate 32-bit behavior (e.g. add-two-integers-without-+).</p>
+</section>
+
+<section id="numtheory">
+<h2>Number theory (GCD / LCM / primes / fast power)</h2>
+<p class="why"><span class="h">When &amp; why</span>A small toolbox covers most math-flavored problems. <b>GCD</b> (Euclid's algorithm) underlies fraction reduction, "is line through points," and water-jug puzzles; LCM derives from it. The <b>sieve of Eratosthenes</b> precomputes all primes up to n in ~O(n log log n) — use it for count-primes and prime-factor problems. <b>Fast (binary) exponentiation</b> computes <code class="inl">a^b</code> (often mod p) in O(log b) and is essential for "pow(x,n)," modular-arithmetic, and combinatorics with a large modulus. Recognize these by keywords: divisibility, prime, modulo 1e9+7, large exponent.</p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">int gcd(int a, int b) {
+    while (b != 0) { int t = b; b = a % b; a = t; }
+    return a;
+}
+long lcm(int a, int b) { return (long)a / gcd(a,b) * b; }
+
+// Sieve of Eratosthenes: primes up to n
+boolean[] sieve(int n) {
+    boolean[] comp = new boolean[n + 1];
+    for (int i = 2; (long)i * i &lt;= n; i++)
+        if (!comp[i])
+            for (int j = i * i; j &lt;= n; j += i)
+                comp[j] = true;
+    return comp;   // comp[k]==false &amp;&amp; k&gt;=2 -&gt; prime
+}
+
+// Fast power: a^b mod m  in O(log b)
+long power(long a, long b, long m) {
+    long res = 1; a %= m;
+    while (b &gt; 0) {
+        if ((b &amp; 1) == 1) res = res * a % m;
+        a = a * a % m;
+        b &gt;&gt;= 1;
+    }
+    return res;
+}</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">import math
+math.gcd(a, b)              # built-in
+math.lcm(a, b)             # built-in (3.9+)
+# or: a // math.gcd(a, b) * b
+
+# Sieve of Eratosthenes: primes up to n
+def sieve(n):
+    comp = [False] * (n + 1)
+    for i in range(2, int(n**0.5) + 1):
+        if not comp[i]:
+            for j in range(i*i, n + 1, i):
+                comp[j] = True
+    return [k for k in range(2, n+1) if not comp[k]]
+
+# Fast power is BUILT IN:
+pow(a, b)                  # a^b
+pow(a, b, m)               # a^b mod m, O(log b)
+pow(a, -1, m)              # modular inverse (3.8+)</code></pre></div>
+</div>
+<p class="tip"><b>Tip:</b> Python's built-in <code class="inl">pow(a, b, m)</code> already does fast modular exponentiation (and <code class="inl">pow(a, -1, m)</code> gives the modular inverse) — don't hand-roll it. In Java, watch overflow: cast to <code class="inl">long</code> before multiplying in both LCM and modular power, since <code class="inl">a * a</code> easily exceeds <code class="inl">int</code> range.</p>
+</section>
+
+<section id="matrix">
+<h2>Matrix transforms (rotate / transpose / spiral)</h2>
+<p class="why"><span class="h">When &amp; why</span>These are pattern-recognition problems: once you know the index mapping, the code is short. <b>Transpose</b> swaps <code class="inl">m[i][j]</code> with <code class="inl">m[j][i]</code>; rotating 90° clockwise is "transpose, then reverse each row" (counter-clockwise: reverse rows first, then transpose) — this lets you rotate <b>in place</b>. Spiral traversal maintains four shrinking boundaries (top/bottom/left/right). Set-matrix-zeroes uses the first row/column as marker storage for O(1) space. Recognize by "rotate the image," "print spiral," "diagonal traverse."</p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">// Rotate n x n 90° clockwise, IN PLACE:
+void rotate(int[][] m) {
+    int n = m.length;
+    // 1) transpose
+    for (int i = 0; i &lt; n; i++)
+        for (int j = i + 1; j &lt; n; j++) {
+            int t = m[i][j]; m[i][j] = m[j][i]; m[j][i] = t;
+        }
+    // 2) reverse each row
+    for (int[] row : m)
+        for (int l = 0, r = n - 1; l &lt; r; l++, r--) {
+            int t = row[l]; row[l] = row[r]; row[r] = t;
+        }
+}
+// Spiral order:
+List&lt;Integer&gt; spiral(int[][] m) {
+    List&lt;Integer&gt; res = new ArrayList&lt;&gt;();
+    int top=0, bot=m.length-1, left=0, right=m[0].length-1;
+    while (top &lt;= bot &amp;&amp; left &lt;= right) {
+        for (int j=left;j&lt;=right;j++) res.add(m[top][j]);
+        top++;
+        for (int i=top;i&lt;=bot;i++) res.add(m[i][right]);
+        right--;
+        if (top&lt;=bot) for (int j=right;j&gt;=left;j--) res.add(m[bot][j]);
+        bot--;
+        if (left&lt;=right) for (int i=bot;i&gt;=top;i--) res.add(m[i][left]);
+        left++;
+    }
+    return res;
+}</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python"># Rotate n x n 90° clockwise, IN PLACE:
+def rotate(m):
+    n = len(m)
+    # 1) transpose
+    for i in range(n):
+        for j in range(i + 1, n):
+            m[i][j], m[j][i] = m[j][i], m[i][j]
+    # 2) reverse each row
+    for row in m:
+        row.reverse()
+
+# transpose to a NEW matrix (pythonic):
+t = [list(row) for row in zip(*m)]
+
+# Spiral order:
+def spiral(m):
+    res = []
+    while m:
+        res += m.pop(0)          # top row
+        m = [list(r) for r in zip(*m)][::-1]  # rotate CCW
+    return res
+# (classic 4-boundary version also works &amp; is O(1) extra)</code></pre></div>
+</div>
+<p class="tip"><b>Tip:</b> <code class="inl">zip(*matrix)</code> is the Python one-liner for transpose, and the "peel top row then rotate" trick gives a 3-line spiral. For interviews, still know the explicit 4-boundary spiral and the transpose-then-reverse rotate, since they generalize and run in O(1) extra space.</p>
+</section>
+
+<section id="binsearch">
+<h2>Binary search</h2>
+<p class="why"><span class="h">When &amp; why</span>Use binary search whenever the search space is <b>monotonic</b> — sorted data, or a yes/no predicate that flips exactly once (false…false true…true). It turns O(n) scans into O(log n). Beyond "find a value in a sorted array," the high-value interview skill is <b>binary search on the answer</b>: when asked for the minimum capacity / max distance / smallest feasible value, binary-search the answer and write a feasibility check (e.g. Koko eating bananas, split-array-largest-sum, ship packages in D days). The <code class="inl">lower_bound</code>/<code class="inl">upper_bound</code> template (loop while <code class="inl">lo &lt; hi</code>, return <code class="inl">lo</code>) handles insertion points and "first/last occurrence."</p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">// exact target -&gt; index, else -1
+int binarySearch(int[] a, int target) {
+    int lo = 0, hi = a.length - 1;
+    while (lo &lt;= hi) {
+        int mid = lo + (hi - lo) / 2;   // avoid overflow
+        if (a[mid] == target) return mid;
+        else if (a[mid] &lt; target) lo = mid + 1;
+        else hi = mid - 1;
+    }
+    return -1;
+}
+// leftmost insertion point (lower_bound):
+int lowerBound(int[] a, int t) {
+    int lo = 0, hi = a.length;
+    while (lo &lt; hi) {
+        int mid = lo + (hi - lo) / 2;
+        if (a[mid] &lt; t) lo = mid + 1; else hi = mid;
+    }
+    return lo;
+}
+// built-ins:
+int i = Arrays.binarySearch(a, t); // &lt;0 if absent
+Collections.binarySearch(list, t);</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python"># exact target -> index, else -1
+def binary_search(a, target):
+    lo, hi = 0, len(a) - 1
+    while lo &lt;= hi:
+        mid = (lo + hi) // 2        # no overflow in Python
+        if a[mid] == target:
+            return mid
+        elif a[mid] &lt; target:
+            lo = mid + 1
+        else:
+            hi = mid - 1
+    return -1
+
+# built-ins (the pro move):
+import bisect
+bisect.bisect_left(a, t)   # lower_bound / leftmost
+bisect.bisect_right(a, t)  # upper_bound / rightmost
+bisect.insort(a, t)        # insert keeping sorted</code></pre></div>
+</div>
+<p class="tip"><b>Tip:</b> Use <code class="inl">lo + (hi-lo)/2</code> in Java to dodge integer overflow on <code class="inl">(lo+hi)</code>; Python is immune. The <code class="inl">while lo &lt; hi</code> "answer space" template (returning <code class="inl">lo</code>) generalizes to "binary search on the answer" problems. Python's <code class="inl">bisect</code> module replaces hand-written lower/upper-bound code in interviews.</p>
+</section>
+
+<section id="twoptr">
+<h2>Two pointers</h2>
+<p class="why"><span class="h">When &amp; why</span>Two pointers collapse a nested O(n²) scan into a single O(n) pass by moving indices intelligently instead of restarting. The <b>opposite-ends</b> variant needs sorted data and answers "find a pair with sum/closeness X," container-with-most-water, and valid-palindrome. The <b>fast/slow (same-direction)</b> variant powers in-place compaction (remove duplicates/zeros, partition), and — applied to linked lists — cycle detection and "find the middle." Trigger words: "sorted array," "pair/triplet," "in place with O(1) space," "remove/move elements."</p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">// opposite ends (sorted array, find pair sum):
+int i = 0, j = a.length - 1;
+while (i &lt; j) {
+    int sum = a[i] + a[j];
+    if (sum == target) return new int[]{i, j};
+    else if (sum &lt; target) i++;
+    else j--;
+}
+// fast/slow (in-place dedupe of sorted array):
+int slow = 0;
+for (int fast = 1; fast &lt; a.length; fast++) {
+    if (a[fast] != a[slow]) a[++slow] = a[fast];
+}
+int newLen = slow + 1;</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python"># opposite ends (sorted array, find pair sum):
+i, j = 0, len(a) - 1
+while i &lt; j:
+    s = a[i] + a[j]
+    if s == target:
+        return [i, j]
+    elif s &lt; target:
+        i += 1
+    else:
+        j -= 1
+
+# fast/slow (in-place dedupe of sorted array):
+slow = 0
+for fast in range(1, len(a)):
+    if a[fast] != a[slow]:
+        slow += 1
+        a[slow] = a[fast]
+new_len = slow + 1</code></pre></div>
+</div>
+<p class="tip"><b>Tip:</b> Two-pointer "opposite ends" needs a sorted array (or one you can sort). The "fast/slow" variant powers in-place array compaction, cycle detection, and removing duplicates — all O(1) extra space.</p>
+</section>
+
+<section id="cyclic">
+<h2>Cyclic sort (numbers in range 1..n)</h2>
+<p class="why"><span class="h">When &amp; why</span>When an array contains <code class="inl">n</code> integers drawn from the range <code class="inl">1..n</code> (or <code class="inl">0..n-1</code>), each value has a natural "home" index, so you can sort in <b>O(n) time and O(1) space</b> by swapping each number to its correct slot. After the pass, the first index whose value is wrong reveals the missing/duplicate number. This is the go-to for "find the missing number," "find all duplicates," "find the first missing positive," and "set mismatch" — problems that look like they need a hash set but don't.</p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">// place each value v at index v-1 (range 1..n)
+void cyclicSort(int[] a) {
+    int i = 0;
+    while (i &lt; a.length) {
+        int correct = a[i] - 1;          // home index of a[i]
+        if (a[i] != a[correct]) {         // not in place -> swap
+            int t = a[i]; a[i] = a[correct]; a[correct] = t;
+        } else i++;
+    }
+}
+// then: first index where a[i] != i+1 is the missing number
+int firstMissing(int[] a) {
+    cyclicSort(a);
+    for (int i = 0; i &lt; a.length; i++)
+        if (a[i] != i + 1) return i + 1;
+    return a.length + 1;
+}</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python"># place each value v at index v-1 (range 1..n)
+def cyclic_sort(a):
+    i = 0
+    while i &lt; len(a):
+        correct = a[i] - 1               # home index of a[i]
+        if a[i] != a[correct]:           # not in place -> swap
+            a[i], a[correct] = a[correct], a[i]
+        else:
+            i += 1
+
+def first_missing(a):
+    cyclic_sort(a)
+    for i in range(len(a)):
+        if a[i] != i + 1:
+            return i + 1
+    return len(a) + 1</code></pre></div>
+</div>
+<p class="tip"><b>Gotcha:</b> swap based on the <i>value's home</i> (<code class="inl">a[correct]</code>), not index order, and only advance <code class="inl">i</code> when the current slot is correct — total work is still O(n) because each swap parks one number permanently. For "first missing positive" (unbounded values), ignore numbers ≤0 or &gt;n during placement. An alternative O(1)-space trick for the same problems is <b>index-as-hash sign marking</b> (negate <code class="inl">a[abs(x)-1]</code>).</p>
+</section>
+
+<section id="window">
+<h2>Sliding window</h2>
+<p class="why"><span class="h">When &amp; why</span>Sliding window is the specialization of two pointers for <b>contiguous subarrays/substrings</b> with a constraint: "longest substring with ≤ K distinct," "smallest subarray with sum ≥ target," "max sum of window size k." Both pointers only move forward, so each element is added and removed at most once → O(n). The mental model: grow the right edge greedily; when the window violates the constraint, shrink the left edge until it's valid again, tracking the best window seen. Fixed-size windows just slide both edges together. If the problem says "subarray/substring" + "longest/shortest/at most/exactly," this is almost always the tool.</p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">// longest substring with no repeats:
+int lengthOfLongest(String s) {
+    Map&lt;Character,Integer&gt; last = new HashMap&lt;&gt;();
+    int left = 0, best = 0;
+    for (int right = 0; right &lt; s.length(); right++) {
+        char c = s.charAt(right);
+        if (last.containsKey(c) &amp;&amp; last.get(c) &gt;= left)
+            left = last.get(c) + 1;     // shrink
+        last.put(c, right);
+        best = Math.max(best, right - left + 1);
+    }
+    return best;
+}</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python"># longest substring with no repeats:
+def length_of_longest(s):
+    last = {}
+    left = best = 0
+    for right, c in enumerate(s):
+        if c in last and last[c] &gt;= left:
+            left = last[c] + 1          # shrink
+        last[c] = right
+        best = max(best, right - left + 1)
+    return best</code></pre></div>
+</div>
+<p class="tip"><b>Pattern:</b> Expand <code class="inl">right</code> every step; shrink <code class="inl">left</code> only while a constraint is violated. Keep a running aggregate (count, sum, freq map) so each element enters and leaves the window once → O(n). Works for "longest/shortest subarray with property X."</p>
+</section>
+
+<section id="stringalgo">
+<h2>String algorithms (palindromes &amp; matching)</h2>
+<p class="why"><span class="h">When &amp; why</span>A few string-specific techniques show up repeatedly. <b>Expand-around-center</b> solves palindrome problems (longest palindromic substring, count palindromic substrings) in O(n²)/O(1) by trying each of the <code class="inl">2n-1</code> centers and growing outward. For <b>substring search</b>, <b>KMP</b> finds a pattern in O(n+m) using a prefix-function (failure table) so it never re-examines text characters, and <b>Rabin-Karp</b> uses a rolling hash to compare windows in O(1) — handy for multiple-pattern or "find duplicated substring" problems.</p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA — expand around center</div>
+<pre><code class="language-java">String longestPalindrome(String s) {
+    int start = 0, end = 0;
+    for (int i = 0; i &lt; s.length(); i++) {
+        int len1 = expand(s, i, i);     // odd length
+        int len2 = expand(s, i, i + 1); // even length
+        int len = Math.max(len1, len2);
+        if (len &gt; end - start + 1) {
+            start = i - (len - 1) / 2;
+            end = i + len / 2;
+        }
+    }
+    return s.substring(start, end + 1);
+}
+int expand(String s, int l, int r) {
+    while (l &gt;= 0 &amp;&amp; r &lt; s.length() &amp;&amp; s.charAt(l)==s.charAt(r)) {
+        l--; r++;
+    }
+    return r - l - 1;                    // matched length
+}</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON — expand + KMP table</div>
+<pre><code class="language-python">def longest_palindrome(s):
+    start = end = 0
+    def expand(l, r):
+        while l &gt;= 0 and r &lt; len(s) and s[l] == s[r]:
+            l -= 1; r += 1
+        return l + 1, r - 1              # bounds of palindrome
+    for i in range(len(s)):
+        for l, r in (expand(i, i), expand(i, i + 1)):
+            if r - l &gt; end - start:
+                start, end = l, r
+    return s[start:end + 1]
+
+# KMP prefix function (failure table):
+def kmp_table(p):
+    f = [0] * len(p)
+    k = 0
+    for i in range(1, len(p)):
+        while k and p[i] != p[k]: k = f[k-1]
+        if p[i] == p[k]: k += 1
+        f[i] = k
+    return f          # use to match in O(n+m)</code></pre></div>
+</div>
+<p class="tip"><b>Remember:</b> palindrome substring problems → <b>expand around center</b>, and don't forget the even-length centers (between two chars). For pattern matching, Python's <code class="inl">in</code> / <code class="inl">str.find</code> is usually enough in interviews; reach for KMP only when asked to implement matching or when naive O(n·m) is too slow. Rolling-hash (Rabin-Karp) is the tool for "longest duplicate substring" (binary-search the length + hash).</p>
+</section>
+
+<section id="prefix">
+<h2>Prefix sums &amp; difference arrays</h2>
+<p class="why"><span class="h">When &amp; why</span>A prefix-sum array precomputes cumulative totals so that <b>any range sum becomes O(1)</b> (<code class="inl">pre[r+1] - pre[l]</code>) instead of re-adding each query — essential when you have many range queries or need it inside a loop. The killer combo is <b>prefix sum + hash map</b>: "subarray sum equals k," "count subarrays divisible by k," "longest subarray with equal 0s and 1s" all work by storing how often each running sum has appeared. A <b>difference array</b> is the inverse — to add a value over many ranges, mark <code class="inl">+v</code> at the start and <code class="inl">-v</code> just past the end, then prefix-sum once at the end (range-update problems, car-pooling, corporate-flight-bookings). 2D prefix sums extend this to submatrix queries.</p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">// build prefix sums (pre[i] = sum of a[0..i-1]):
+int[] pre = new int[n + 1];
+for (int i = 0; i &lt; n; i++) pre[i+1] = pre[i] + a[i];
+int rangeSum = pre[r+1] - pre[l];     // sum a[l..r]
+
+// subarray sum == k  (count):
+Map&lt;Integer,Integer&gt; cnt = new HashMap&lt;&gt;();
+cnt.put(0, 1);
+int sum = 0, ans = 0;
+for (int x : a) {
+    sum += x;
+    ans += cnt.getOrDefault(sum - k, 0);
+    cnt.merge(sum, 1, Integer::sum);
+}
+
+// difference array: add v to a[l..r] for many queries
+int[] diff = new int[n + 1];
+// for each (l, r, v):  diff[l] += v; diff[r+1] -= v;
+int run = 0;
+for (int i = 0; i &lt; n; i++) { run += diff[i]; a[i] = run; }</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python"># build prefix sums:
+pre = [0] * (n + 1)
+for i in range(n): pre[i+1] = pre[i] + a[i]
+range_sum = pre[r+1] - pre[l]         # sum a[l..r]
+# or use itertools.accumulate:
+from itertools import accumulate
+pre = list(accumulate(a, initial=0))
+
+# subarray sum == k  (count):
+from collections import defaultdict
+cnt = defaultdict(int); cnt[0] = 1
+s = ans = 0
+for x in a:
+    s += x
+    ans += cnt[s - k]
+    cnt[s] += 1
+
+# difference array: add v to a[l..r] for many queries
+diff = [0] * (n + 1)
+# for each (l, r, v):  diff[l] += v; diff[r+1] -= v
+a = list(accumulate(diff))[:n]</code></pre></div>
+</div>
+<p class="tip"><b>Tip:</b> Always size the prefix array <code class="inl">n+1</code> and seed <code class="inl">pre[0]=0</code> so range formulas have no edge cases. Pre-seed the hash map with <code class="inl">{0: 1}</code> in the subarray-sum pattern to count subarrays that start at index 0. In Java use <code class="inl">long[]</code> for prefix sums when values can be large to avoid overflow.</p>
+</section>
+
+<section id="monostack">
+<h2>Monotonic stack / deque</h2>
+<p class="why"><span class="h">When &amp; why</span>A monotonic stack keeps elements in increasing or decreasing order, popping ones that violate the order as you go. It answers <b>"next/previous greater or smaller element"</b> in O(n) total — the engine behind daily-temperatures, next-greater-element, largest-rectangle-in-histogram, trapping-rain-water, and sum-of-subarray-minimums. The monotonic <b>deque</b> variant maintains the max/min of a sliding window in O(1) amortized (sliding-window-maximum) by dropping dominated elements from the back and stale indices from the front. Trigger phrases: "next greater," "span," "histogram," "window max/min." The insight: each element is pushed and popped at most once, so the inner while-loop doesn't make it O(n²).</p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">// Next Greater Element: for each i, nearest j&gt;i with a[j]&gt;a[i]
+int[] nextGreater(int[] a) {
+    int n = a.length;
+    int[] res = new int[n];
+    Arrays.fill(res, -1);
+    Deque&lt;Integer&gt; st = new ArrayDeque&lt;&gt;();   // indices, decreasing
+    for (int i = 0; i &lt; n; i++) {
+        while (!st.isEmpty() &amp;&amp; a[st.peek()] &lt; a[i])
+            res[st.pop()] = a[i];
+        st.push(i);
+    }
+    return res;
+}
+
+// Sliding window maximum (size k) with a deque of indices:
+int[] maxWindow(int[] a, int k) {
+    Deque&lt;Integer&gt; dq = new ArrayDeque&lt;&gt;();   // decreasing values
+    int[] res = new int[a.length - k + 1];
+    for (int i = 0; i &lt; a.length; i++) {
+        if (!dq.isEmpty() &amp;&amp; dq.peekFirst() == i - k) dq.pollFirst();
+        while (!dq.isEmpty() &amp;&amp; a[dq.peekLast()] &lt; a[i]) dq.pollLast();
+        dq.offerLast(i);
+        if (i &gt;= k - 1) res[i - k + 1] = a[dq.peekFirst()];
+    }
+    return res;
+}</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python"># Next Greater Element:
+def next_greater(a):
+    n = len(a)
+    res = [-1] * n
+    st = []                       # indices, decreasing values
+    for i in range(n):
+        while st and a[st[-1]] &lt; a[i]:
+            res[st.pop()] = a[i]
+        st.append(i)
+    return res
+
+# Sliding window maximum (size k):
+from collections import deque
+def max_window(a, k):
+    dq = deque()                  # indices, decreasing values
+    res = []
+    for i, x in enumerate(a):
+        if dq and dq[0] == i - k:
+            dq.popleft()
+        while dq and a[dq[-1]] &lt; x:
+            dq.pop()
+        dq.append(i)
+        if i &gt;= k - 1:
+            res.append(a[dq[0]])
+    return res</code></pre></div>
+</div>
+<p class="tip"><b>Tip:</b> Store <b>indices</b>, not values, on the stack/deque so you can compute distances/spans and detect when an element falls out of the window. Decide direction by what you're looking for: a <i>decreasing</i> stack finds the next <i>greater</i> element; an <i>increasing</i> stack finds the next <i>smaller</i>. For histogram/rain-water, append a sentinel <code class="inl">0</code> at the end to flush the stack.</p>
+</section>
+
+<section id="intervals">
+<h2>Intervals &amp; greedy</h2>
+<p class="why"><span class="h">When &amp; why</span>Interval problems almost always start the same way: <b>sort by start (to merge) or by end (to schedule)</b>, then sweep once. Merge-intervals, insert-interval, and meeting-rooms (min rooms = max overlap, found with a min-heap of end times or a sweep line) all follow from this. The broader idea is <b>greedy</b>: make the locally optimal choice and prove it's globally optimal — pick the interval that ends earliest to maximize non-overlapping count (activity selection / erase-overlap-intervals), or jump as far as reachable (jump-game). Greedy works when an exchange argument holds; if it doesn't, fall back to DP. Recognize by "intervals," "meetings," "minimum number of …," "maximum non-overlapping."</p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">// Merge overlapping intervals:
+int[][] merge(int[][] iv) {
+    Arrays.sort(iv, (a, b) -&gt; Integer.compare(a[0], b[0]));
+    List&lt;int[]&gt; out = new ArrayList&lt;&gt;();
+    for (int[] cur : iv) {
+        if (out.isEmpty() || out.get(out.size()-1)[1] &lt; cur[0])
+            out.add(cur);                       // no overlap
+        else
+            out.get(out.size()-1)[1] =
+                Math.max(out.get(out.size()-1)[1], cur[1]);
+    }
+    return out.toArray(new int[0][]);
+}
+
+// Min meeting rooms = max concurrent intervals:
+int minRooms(int[][] iv) {
+    int n = iv.length;
+    int[] starts = new int[n], ends = new int[n];
+    for (int i = 0; i &lt; n; i++) { starts[i]=iv[i][0]; ends[i]=iv[i][1]; }
+    Arrays.sort(starts); Arrays.sort(ends);
+    int rooms = 0, max = 0, j = 0;
+    for (int i = 0; i &lt; n; i++) {
+        while (j &lt; n &amp;&amp; ends[j] &lt;= starts[i]) { rooms--; j++; }
+        rooms++; max = Math.max(max, rooms);
+    }
+    return max;
+}</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python"># Merge overlapping intervals:
+def merge(iv):
+    iv.sort(key=lambda x: x[0])
+    out = []
+    for cur in iv:
+        if not out or out[-1][1] &lt; cur[0]:
+            out.append(cur[:])        # no overlap
+        else:
+            out[-1][1] = max(out[-1][1], cur[1])
+    return out
+
+# Min meeting rooms via heap of end times:
+import heapq
+def min_rooms(iv):
+    iv.sort(key=lambda x: x[0])
+    heap = []                          # end times in progress
+    for s, e in iv:
+        if heap and heap[0] &lt;= s:
+            heapq.heapreplace(heap, e) # room freed, reuse
+        else:
+            heapq.heappush(heap, e)    # need a new room
+    return len(heap)</code></pre></div>
+</div>
+<p class="tip"><b>Tip:</b> The sort key decides the problem: sort by <i>start</i> to merge/insert; sort by <i>end</i> for "maximum non-overlapping intervals" (greedily keep the earliest-ending one). For min-rooms, either sweep separately-sorted start/end arrays or keep a min-heap of active end times — both are O(n log n).</p>
+</section>
+
+<section id="bfs">
+<h2>BFS (shortest path on unweighted graph / grid)</h2>
+<p class="why"><span class="h">When &amp; why</span>BFS explores in rings of increasing distance, so it's the go-to for <b>shortest path / fewest steps in an unweighted graph or grid</b> — word ladder, rotting oranges, knight moves, maze escape. The level-snapshot loop (process exactly <code class="inl">q.size()</code> nodes per round) is what lets you count distance/steps. It's also used for level-order tree traversal and "multi-source" spread (seed the queue with all sources at once). Use BFS over DFS specifically when you need the <i>shortest</i> path or a layer count; if you only need reachability/connectivity, either works. O(V+E).</p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">int bfs(int[][] grid, int sr, int sc) {
+    int R = grid.length, C = grid[0].length;
+    boolean[][] seen = new boolean[R][C];
+    Deque&lt;int[]&gt; q = new ArrayDeque&lt;&gt;();
+    q.offer(new int[]{sr, sc});
+    seen[sr][sc] = true;
+    int dist = 0;
+    int[][] DIRS = {{0,1},{0,-1},{1,0},{-1,0}};
+    while (!q.isEmpty()) {
+        int sz = q.size();          // level boundary
+        for (int k = 0; k &lt; sz; k++) {
+            int[] cur = q.poll();
+            for (int[] d : DIRS) {
+                int nr = cur[0]+d[0], nc = cur[1]+d[1];
+                if (nr&lt;0||nr&gt;=R||nc&lt;0||nc&gt;=C) continue;
+                if (seen[nr][nc]||grid[nr][nc]==1) continue;
+                seen[nr][nc] = true;
+                q.offer(new int[]{nr, nc});
+            }
+        }
+        dist++;
+    }
+    return dist;
+}</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">from collections import deque
+
+def bfs(grid, sr, sc):
+    R, C = len(grid), len(grid[0])
+    seen = [[False]*C for _ in range(R)]
+    q = deque([(sr, sc)])
+    seen[sr][sc] = True
+    dist = 0
+    DIRS = [(0,1),(0,-1),(1,0),(-1,0)]
+    while q:
+        for _ in range(len(q)):     # level boundary
+            r, c = q.popleft()
+            for dr, dc in DIRS:
+                nr, nc = r+dr, c+dc
+                if not (0 &lt;= nr &lt; R and 0 &lt;= nc &lt; C):
+                    continue
+                if seen[nr][nc] or grid[nr][nc] == 1:
+                    continue
+                seen[nr][nc] = True
+                q.append((nr, nc))
+        dist += 1
+    return dist</code></pre></div>
+</div>
+<p class="tip"><b>Key idea:</b> Mark visited <i>when enqueueing</i>, not when dequeuing, to avoid adding a node twice. The inner <code class="inl">for sz</code> loop snapshots one "level" so <code class="inl">dist</code> counts edges/layers — needed for shortest-path and "minimum steps" problems.</p>
+</section>
+
+<section id="dfs">
+<h2>DFS (recursive &amp; iterative)</h2>
+<p class="why"><span class="h">When &amp; why</span>DFS goes deep before wide, which makes it natural for <b>"explore everything reachable" and bottom-up aggregation</b>: count/flood-fill connected components (number of islands), detect cycles, clone a graph, compute tree heights/sums, and enumerate paths. It uses the call stack (recursive) or an explicit stack (iterative). Prefer DFS when you don't need shortest path and the recursion mirrors the structure (trees, regions); prefer the iterative version when depth can blow the stack. O(V+E). Remember: BFS finds shortest paths, DFS does not — pick by whether distance matters.</p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">// recursive grid flood fill / count islands:
+void dfs(int[][] g, int r, int c) {
+    int R = g.length, C = g[0].length;
+    if (r&lt;0||r&gt;=R||c&lt;0||c&gt;=C||g[r][c]!=1) return;
+    g[r][c] = 0;                    // mark visited
+    dfs(g, r+1, c); dfs(g, r-1, c);
+    dfs(g, r, c+1); dfs(g, r, c-1);
+}
+
+// iterative with explicit stack (avoids deep recursion):
+void dfsIter(List&lt;List&lt;Integer&gt;&gt; adj, int s) {
+    boolean[] seen = new boolean[adj.size()];
+    Deque&lt;Integer&gt; st = new ArrayDeque&lt;&gt;();
+    st.push(s);
+    while (!st.isEmpty()) {
+        int u = st.pop();
+        if (seen[u]) continue;
+        seen[u] = true;
+        for (int v : adj.get(u))
+            if (!seen[v]) st.push(v);
+    }
+}</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">import sys
+sys.setrecursionlimit(10**6)   # raise default ~1000!
+
+# recursive grid flood fill / count islands:
+def dfs(g, r, c):
+    R, C = len(g), len(g[0])
+    if not (0 &lt;= r &lt; R and 0 &lt;= c &lt; C) or g[r][c] != 1:
+        return
+    g[r][c] = 0                 # mark visited
+    dfs(g, r+1, c); dfs(g, r-1, c)
+    dfs(g, r, c+1); dfs(g, r, c-1)
+
+# iterative with explicit stack:
+def dfs_iter(adj, s):
+    seen = [False] * len(adj)
+    st = [s]
+    while st:
+        u = st.pop()
+        if seen[u]:
+            continue
+        seen[u] = True
+        for v in adj[u]:
+            if not seen[v]:
+                st.append(v)</code></pre></div>
+</div>
+<p class="tip"><b>Critical Python gotcha:</b> the default recursion limit is ~1000 — deep grids/trees throw <code class="inl">RecursionError</code>. Call <code class="inl">sys.setrecursionlimit(10**6)</code> or switch to an iterative stack. Java's default stack is also finite; for very deep graphs prefer the iterative version in both languages.</p>
+</section>
+
+<section id="backtrack">
+<h2>Backtracking (permutations / subsets / combinations)</h2>
+<p class="why"><span class="h">When &amp; why</span>Backtracking is brute-force search done cleanly: build a candidate incrementally, recurse, then <b>undo the last choice</b> to try the next. Use it to <i>enumerate</i> all valid configurations — permutations, subsets, combinations, N-Queens, Sudoku, word search, generate-parentheses, combination-sum. The signal is "find/return <i>all</i>" or "count all ways" with a branching decision at each step. It's exponential by nature, so the real craft is <b>pruning</b> early (skip choices that can't lead to a solution) and sorting input to skip duplicates. When you only need the best/count rather than every solution, that's usually DP instead.</p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">List&lt;List&lt;Integer&gt;&gt; res = new ArrayList&lt;&gt;();
+
+void backtrack(int[] nums, List&lt;Integer&gt; path,
+               boolean[] used) {
+    if (path.size() == nums.length) {
+        res.add(new ArrayList&lt;&gt;(path));  // COPY!
+        return;
+    }
+    for (int i = 0; i &lt; nums.length; i++) {
+        if (used[i]) continue;
+        used[i] = true;
+        path.add(nums[i]);          // choose
+        backtrack(nums, path, used);
+        path.remove(path.size()-1); // un-choose
+        used[i] = false;
+    }
+}</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">res = []
+
+def backtrack(nums, path, used):
+    if len(path) == len(nums):
+        res.append(path[:])         # COPY!
+        return
+    for i in range(len(nums)):
+        if used[i]:
+            continue
+        used[i] = True
+        path.append(nums[i])        # choose
+        backtrack(nums, path, used)
+        path.pop()                  # un-choose
+        used[i] = False
+
+# subsets variant: branch include/exclude at each index
+# combinations: pass a start index to avoid reuse</code></pre></div>
+</div>
+<p class="tip"><b>Gotcha:</b> When you record a solution, store a <i>copy</i> of <code class="inl">path</code> (<code class="inl">new ArrayList&lt;&gt;(path)</code> / <code class="inl">path[:]</code>) — otherwise every entry points to the same list that later gets mutated back to empty. The choose → recurse → un-choose trio is the heart of backtracking.</p>
+</section>
+
+<section id="dp">
+<h2>Dynamic programming</h2>
+<p class="why"><span class="h">When &amp; why</span>DP applies when a problem has <b>overlapping subproblems</b> (the same smaller cases recur) and <b>optimal substructure</b> (the answer is built from answers to those subproblems). Signals: "max/min cost," "number of ways," "can you reach/partition," "longest/shortest subsequence." The workflow that scores points: define the state (what do the indices mean?), write the recurrence (how does a state depend on smaller ones?), set base cases, then choose a direction. <b>Top-down memoization</b> (recursion + cache) is easiest to derive — in Python just slap <code class="inl">@lru_cache</code> on the recursion. <b>Bottom-up tabulation</b> avoids recursion limits and enables space optimization (often you only need the previous row/value). Start top-down to get correctness, convert to bottom-up if you need speed/space.</p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">// 1D: climbing stairs / Fibonacci-style:
+int[] dp = new int[n + 1];
+dp[0] = 1; dp[1] = 1;
+for (int i = 2; i &lt;= n; i++)
+    dp[i] = dp[i-1] + dp[i-2];
+
+// 2D: edit distance / LCS grid:
+int[][] dp2 = new int[n+1][m+1];
+for (int i = 1; i &lt;= n; i++)
+    for (int j = 1; j &lt;= m; j++)
+        dp2[i][j] = (a.charAt(i-1)==b.charAt(j-1))
+            ? dp2[i-1][j-1] + 1
+            : Math.max(dp2[i-1][j], dp2[i][j-1]);
+
+// top-down memoization:
+Integer[] memo = new Integer[n];
+int rec(int i) {
+    if (i &lt;= 0) return base;
+    if (memo[i] != null) return memo[i];
+    return memo[i] = rec(i-1) + rec(i-2);
+}</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python"># 1D: climbing stairs / Fibonacci-style:
+dp = [0] * (n + 1)
+dp[0] = dp[1] = 1
+for i in range(2, n + 1):
+    dp[i] = dp[i-1] + dp[i-2]
+
+# 2D: edit distance / LCS grid:
+dp2 = [[0]*(m+1) for _ in range(n+1)]
+for i in range(1, n+1):
+    for j in range(1, m+1):
+        if a[i-1] == b[j-1]:
+            dp2[i][j] = dp2[i-1][j-1] + 1
+        else:
+            dp2[i][j] = max(dp2[i-1][j], dp2[i][j-1])
+
+# top-down memoization — one decorator does it all:
+from functools import lru_cache
+@lru_cache(maxsize=None)
+def rec(i):
+    if i &lt;= 0:
+        return base
+    return rec(i-1) + rec(i-2)</code></pre></div>
+</div>
+<p class="tip"><b>Tip:</b> Python's <code class="inl">@lru_cache(maxsize=None)</code> (or <code class="inl">@cache</code> in 3.9+) turns any pure recursive function into top-down DP for free — a huge interview time-saver. Java memoization uses an <code class="inl">Integer[]</code> with <code class="inl">null</code> as "unset" (don't use <code class="inl">-1</code> if -1 is a valid answer). Remember: bottom-up tabulation avoids recursion-depth limits.</p>
+</section>
+
+<section id="dppatterns">
+<h2>DP patterns catalog (recognize the archetype)</h2>
+<p class="why"><span class="h">When &amp; why</span>"DP" isn't one thing — it's ~8 recurring archetypes, each with a signature state and recurrence. The fastest way to solve a DP problem is to match it to the right archetype, then adapt the template. Below is the catalog: identify the <b>state</b> (what the indices mean), write the <b>transition</b> (how a state depends on smaller ones), set base cases, pick a direction.</p>
+<table class="cx">
+<tr><th>Archetype</th><th>State / recurrence</th><th>Classic problems</th></tr>
+<tr><td>Linear / "decision per index"</td><td><code>dp[i]</code> from <code>dp[i-1], dp[i-2]</code></td><td>climbing stairs, house robber, max subarray</td></tr>
+<tr><td>0/1 knapsack</td><td><code>dp[i][w]</code> take or skip item i</td><td>subset sum, partition equal subset, target sum</td></tr>
+<tr><td>Unbounded knapsack</td><td>reuse items: loop amounts outer</td><td>coin change, combination sum IV, rod cutting</td></tr>
+<tr><td>LIS (subsequence)</td><td><code>dp[i]</code> = longest ending at i; O(n log n) w/ patience</td><td>longest increasing subseq, russian dolls</td></tr>
+<tr><td>2-sequence (grid on two strings)</td><td><code>dp[i][j]</code> compare a[i],b[j]</td><td>LCS, edit distance, distinct subsequences</td></tr>
+<tr><td>Grid / path</td><td><code>dp[i][j]</code> from top/left</td><td>unique paths, min path sum, maximal square</td></tr>
+<tr><td>Interval DP</td><td><code>dp[i][j]</code> over a range, split at k</td><td>burst balloons, matrix chain, palindrome partition</td></tr>
+<tr><td>State-machine DP</td><td><code>dp[i][state]</code></td><td>stock with cooldown/fee, paint house</td></tr>
+<tr><td>Bitmask DP (n ≤ ~20)</td><td><code>dp[mask]</code> = subset solved</td><td>TSP, assignment, partition to k equal subsets</td></tr>
+<tr><td>Digit DP / tree DP</td><td>over digits / subtree</td><td>count numbers ≤ N with property; tree rob</td></tr>
+</table>
+<p class="sub">Three templates you'll reuse constantly:</p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA — 0/1 knapsack &amp; LIS</div>
+<pre><code class="language-java">// 0/1 knapsack: max value, capacity W
+int knapsack(int[] wt, int[] val, int W) {
+    int[] dp = new int[W + 1];           // 1-D rolling
+    for (int i = 0; i &lt; wt.length; i++)
+        for (int w = W; w &gt;= wt[i]; w--)  // reverse = use once
+            dp[w] = Math.max(dp[w], dp[w-wt[i]] + val[i]);
+    return dp[W];
+}
+// LIS in O(n log n) via patience sorting
+int lengthOfLIS(int[] a) {
+    List&lt;Integer&gt; tails = new ArrayList&lt;&gt;();
+    for (int x : a) {
+        int i = Collections.binarySearch(tails, x);
+        if (i &lt; 0) i = -(i + 1);
+        if (i == tails.size()) tails.add(x);
+        else tails.set(i, x);
+    }
+    return tails.size();
+}</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON — LCS &amp; LIS</div>
+<pre><code class="language-python"># Longest Common Subsequence (2-sequence grid)
+def lcs(a, b):
+    n, m = len(a), len(b)
+    dp = [[0]*(m+1) for _ in range(n+1)]
+    for i in range(1, n+1):
+        for j in range(1, m+1):
+            if a[i-1] == b[j-1]:
+                dp[i][j] = dp[i-1][j-1] + 1
+            else:
+                dp[i][j] = max(dp[i-1][j], dp[i][j-1])
+    return dp[n][m]
+
+# LIS in O(n log n)
+import bisect
+def length_of_lis(a):
+    tails = []
+    for x in a:
+        i = bisect.bisect_left(tails, x)
+        if i == len(tails): tails.append(x)
+        else: tails[i] = x
+    return len(tails)</code></pre></div>
+</div>
+<p class="tip"><b>How to crack any DP:</b> (1) name the <b>state</b> in words, (2) write the <b>recurrence</b> + base cases, (3) start <b>top-down</b> (recursion + <code class="inl">@lru_cache</code>) to verify correctness, (4) convert to <b>bottom-up</b> and <b>space-optimize</b> (most 2-D DPs need only the previous row → 1-D). The 0/1-knapsack reverse-loop and the "take vs skip" decision are the two ideas behind half of all DP problems.</p>
+</section>
+
+<section id="segtree">
+<h2>Segment tree &amp; Fenwick (BIT)</h2>
+<p class="why"><span class="h">When &amp; why</span>Prefix sums give O(1) range queries but break when the array is <b>updated</b> (every update is O(n) to rebuild). When you need <i>both</i> range queries <i>and</i> point updates in O(log n), use a <b>Fenwick tree (BIT)</b> for sums, or a <b>segment tree</b> for any associative op (min/max/gcd) and range updates. These power "range sum query – mutable," "count of smaller numbers after self," and order-statistics problems.</p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA — Fenwick / BIT (prefix sums, mutable)</div>
+<pre><code class="language-java">class BIT {                  // 1-indexed
+    long[] tree;
+    BIT(int n) { tree = new long[n + 1]; }
+    void update(int i, long delta) {      // a[i] += delta
+        for (; i &lt; tree.length; i += i &amp; (-i)) tree[i] += delta;
+    }
+    long prefix(int i) {                  // sum a[1..i]
+        long s = 0;
+        for (; i &gt; 0; i -= i &amp; (-i)) s += tree[i];
+        return s;
+    }
+    long range(int l, int r) {            // sum a[l..r]
+        return prefix(r) - prefix(l - 1);
+    }
+}
+// i &amp; (-i) isolates the lowest set bit = the node's span</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON — Fenwick / BIT</div>
+<pre><code class="language-python">class BIT:                   # 1-indexed
+    def __init__(self, n):
+        self.tree = [0] * (n + 1)
+    def update(self, i, delta):           # a[i] += delta
+        while i &lt; len(self.tree):
+            self.tree[i] += delta
+            i += i &amp; (-i)
+    def prefix(self, i):                  # sum a[1..i]
+        s = 0
+        while i &gt; 0:
+            s += self.tree[i]
+            i -= i &amp; (-i)
+        return s
+    def range(self, l, r):                # sum a[l..r]
+        return self.prefix(r) - self.prefix(l - 1)</code></pre></div>
+</div>
+<p class="tip"><b>Remember:</b> reach for a Fenwick/segment tree only when the data <b>changes between queries</b> — otherwise a plain prefix-sum array is simpler and faster. BIT is the smaller, faster choice for <b>sum</b> queries; a segment tree is more general (min/max/gcd, lazy propagation for range updates). The <code class="inl">i &amp; (-i)</code> "lowest set bit" trick is the heart of the BIT. Both build in O(n) and query/update in O(log n).</p>
+</section>
+
+<section id="quickselect">
+<h2>Quickselect (k-th smallest / largest)</h2>
+<p class="why"><span class="h">When &amp; why</span>Quickselect finds the k-th smallest/largest element in <b>average O(n)</b> — better than sorting (O(n log n)) or a heap (O(n log k)) — by partitioning like quicksort but only recursing into the side that contains k. Use it for "k-th largest element," "top-k" when you can rearrange the array, and median-of-medians style problems. The trade-off: worst case is O(n²) on adversarial input (mitigate with a random pivot), and it reorders the array. If you can't mutate the input or need a streaming solution, use a heap instead.</p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">// k-th smallest (1-indexed k) — average O(n):
+int quickselect(int[] a, int k) {
+    int lo = 0, hi = a.length - 1, target = k - 1;
+    Random rnd = new Random();
+    while (lo &lt; hi) {
+        int p = partition(a, lo, hi, lo + rnd.nextInt(hi - lo + 1));
+        if (p == target) return a[p];
+        else if (p &lt; target) lo = p + 1;
+        else hi = p - 1;
+    }
+    return a[lo];
+}
+int partition(int[] a, int lo, int hi, int pivotIdx) {
+    int pivot = a[pivotIdx];
+    swap(a, pivotIdx, hi);            // park pivot at end
+    int store = lo;
+    for (int i = lo; i &lt; hi; i++)
+        if (a[i] &lt; pivot) swap(a, store++, i);
+    swap(a, store, hi);
+    return store;
+}
+void swap(int[] a,int i,int j){int t=a[i];a[i]=a[j];a[j]=t;}</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">import random
+# k-th smallest (1-indexed k) — average O(n):
+def quickselect(a, k):
+    target = k - 1
+    lo, hi = 0, len(a) - 1
+    while lo &lt; hi:
+        p = partition(a, lo, hi, random.randint(lo, hi))
+        if p == target: return a[p]
+        elif p &lt; target: lo = p + 1
+        else: hi = p - 1
+    return a[lo]
+
+def partition(a, lo, hi, pivot_idx):
+    pivot = a[pivot_idx]
+    a[pivot_idx], a[hi] = a[hi], a[pivot_idx]   # park at end
+    store = lo
+    for i in range(lo, hi):
+        if a[i] &lt; pivot:
+            a[store], a[i] = a[i], a[store]
+            store += 1
+    a[store], a[hi] = a[hi], a[store]
+    return store
+
+# Pragmatic alternative (don't over-engineer interviews):
+# heapq.nlargest(k, a)[-1]   # k-th largest, O(n log k)</code></pre></div>
+</div>
+<p class="tip"><b>Tip:</b> <b>Randomize the pivot</b> — a fixed pivot makes quickselect O(n²) on sorted input, a common test case. In interviews, mention quickselect for the optimal average-O(n) answer, but a size-k heap (<code class="inl">heapq.nlargest</code> / <code class="inl">PriorityQueue</code>) is simpler, doesn't mutate input, and is usually accepted.</p>
+</section>
+
+<section id="uf">
+<h2>Union-Find (Disjoint Set Union)</h2>
+<p class="why"><span class="h">When &amp; why</span>Union-Find answers "<b>are these two things in the same group?</b>" and "merge these two groups" in near-O(1) amortized time. Reach for it on connectivity problems where edges arrive incrementally and you don't need actual paths: number of provinces/friend-circles, redundant-connection (cycle detection in an undirected graph), accounts-merge, and Kruskal's MST. It's often simpler and faster than BFS/DFS when the question is purely "how many components" or "do these connect." Choose DFS/BFS instead when you need the path itself or distances.</p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">class DSU {
+    int[] parent, rank;
+    DSU(int n) {
+        parent = new int[n]; rank = new int[n];
+        for (int i = 0; i &lt; n; i++) parent[i] = i;
+    }
+    int find(int x) {
+        while (parent[x] != x) {
+            parent[x] = parent[parent[x]]; // path compress
+            x = parent[x];
+        }
+        return x;
+    }
+    boolean union(int a, int b) {
+        int ra = find(a), rb = find(b);
+        if (ra == rb) return false;       // already joined
+        if (rank[ra] &lt; rank[rb]) { int t=ra; ra=rb; rb=t; }
+        parent[rb] = ra;
+        if (rank[ra] == rank[rb]) rank[ra]++;
+        return true;
+    }
+}</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">class DSU:
+    def __init__(self, n):
+        self.parent = list(range(n))
+        self.rank = [0] * n
+    def find(self, x):
+        while self.parent[x] != x:
+            self.parent[x] = self.parent[self.parent[x]]
+            x = self.parent[x]
+        return x
+    def union(self, a, b):
+        ra, rb = self.find(a), self.find(b)
+        if ra == rb:
+            return False                  # already joined
+        if self.rank[ra] &lt; self.rank[rb]:
+            ra, rb = rb, ra
+        self.parent[rb] = ra
+        if self.rank[ra] == self.rank[rb]:
+            self.rank[ra] += 1
+        return True</code></pre></div>
+</div>
+<p class="tip"><b>Use it for:</b> connected components, cycle detection in undirected graphs, Kruskal's MST, "number of provinces / friend circles," and account-merge problems. With path compression + union by rank, operations are effectively O(1) (inverse-Ackermann). <code class="inl">union</code> returning <code class="inl">false</code> means a cycle.</p>
+</section>
+
+<section id="ll">
+<h2>Linked list</h2>
+<p class="why"><span class="h">When &amp; why</span>Linked-list problems test pointer discipline rather than algorithms. The two patterns that solve most of them: a <b>dummy/sentinel head</b> so inserting or deleting the first node needs no special case (remove-nth-from-end, merge two lists, partition), and <b>fast/slow pointers</b> for "find the middle," cycle detection (Floyd), and "k-th from the end" in one pass. The core hazard is losing your reference: always cache <code class="inl">next</code> before you rewire a node. These come up in reverse-list, reorder-list, add-two-numbers, and LRU-cache internals.</p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">class ListNode {            // LeetCode's given def
+    int val; ListNode next;
+    ListNode(int v) { val = v; }
+}
+
+// reverse a list:
+ListNode reverse(ListNode head) {
+    ListNode prev = null, cur = head;
+    while (cur != null) {
+        ListNode nxt = cur.next;
+        cur.next = prev;
+        prev = cur;
+        cur = nxt;
+    }
+    return prev;
+}
+
+// dummy head for clean insert/delete:
+ListNode dummy = new ListNode(0);
+dummy.next = head;
+// fast/slow to find middle / detect cycle:
+ListNode slow = head, fast = head;
+while (fast != null &amp;&amp; fast.next != null) {
+    slow = slow.next; fast = fast.next.next;
+}</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">class ListNode:             # LeetCode's given def
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+# reverse a list:
+def reverse(head):
+    prev, cur = None, head
+    while cur:
+        nxt = cur.next
+        cur.next = prev
+        prev = cur
+        cur = nxt
+    return prev
+
+# dummy head for clean insert/delete:
+dummy = ListNode(0)
+dummy.next = head
+# fast/slow to find middle / detect cycle:
+slow = fast = head
+while fast and fast.next:
+    slow = slow.next
+    fast = fast.next.next</code></pre></div>
+</div>
+<p class="tip"><b>Tip:</b> Two patterns crack most linked-list problems: a <i>dummy head</i> (avoids special-casing the first node on insert/delete) and the <i>fast/slow pointers</i> (find middle, detect cycles via Floyd, find n-th from end). Always save <code class="inl">cur.next</code> before you rewire it.</p>
+</section>
+
+<section id="tree">
+<h2>Binary tree traversal</h2>
+<p class="why"><span class="h">When &amp; why</span>Almost every tree problem is one of four traversals with a tweak. <b>Inorder</b> (left-node-right) yields a BST's values in sorted order — use it for validate-BST and k-th smallest. <b>Postorder</b> (left-right-node) is for bottom-up aggregation where a node needs its children's results first — height, diameter, "is balanced," subtree sums. <b>Preorder</b> (node-left-right) suits top-down passes and serialization. <b>Level-order</b> (BFS) handles "by depth" questions — right-side view, level averages, zigzag. Pick the order by asking: do I need data from my children before I can compute my answer (postorder) or am I passing context down (preorder)?</p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">class TreeNode {
+    int val; TreeNode left, right;
+    TreeNode(int v) { val = v; }
+}
+
+// recursive inorder:
+void inorder(TreeNode n, List&lt;Integer&gt; out) {
+    if (n == null) return;
+    inorder(n.left, out);
+    out.add(n.val);
+    inorder(n.right, out);
+}
+
+// level-order (BFS):
+List&lt;List&lt;Integer&gt;&gt; levelOrder(TreeNode root) {
+    List&lt;List&lt;Integer&gt;&gt; res = new ArrayList&lt;&gt;();
+    if (root == null) return res;
+    Deque&lt;TreeNode&gt; q = new ArrayDeque&lt;&gt;();
+    q.offer(root);
+    while (!q.isEmpty()) {
+        int sz = q.size();
+        List&lt;Integer&gt; lvl = new ArrayList&lt;&gt;();
+        for (int i = 0; i &lt; sz; i++) {
+            TreeNode c = q.poll();
+            lvl.add(c.val);
+            if (c.left != null) q.offer(c.left);
+            if (c.right != null) q.offer(c.right);
+        }
+        res.add(lvl);
+    }
+    return res;
+}</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+# recursive inorder:
+def inorder(n, out):
+    if not n:
+        return
+    inorder(n.left, out)
+    out.append(n.val)
+    inorder(n.right, out)
+
+# level-order (BFS):
+from collections import deque
+def level_order(root):
+    res = []
+    if not root:
+        return res
+    q = deque([root])
+    while q:
+        lvl = []
+        for _ in range(len(q)):
+            c = q.popleft()
+            lvl.append(c.val)
+            if c.left:  q.append(c.left)
+            if c.right: q.append(c.right)
+        res.append(lvl)
+    return res</code></pre></div>
+</div>
+<p class="tip"><b>Tip:</b> Preorder = node, left, right; inorder = left, node, right (gives sorted order for a BST); postorder = left, right, node (use for bottom-up aggregation like height/diameter). Level-order is just BFS with the level-snapshot loop. Most tree problems are a one-line change to one of these skeletons.</p>
+</section>
+
+<section id="trie">
+<h2>Trie (prefix tree)</h2>
+<p class="why"><span class="h">When &amp; why</span>A trie stores a set of strings by shared prefix, so prefix queries cost O(length) regardless of how many words you've inserted — far better than scanning every word. Use it when the problem is explicitly about <b>prefixes or a dictionary of words</b>: implement-trie, word-search-II (trie + grid DFS to prune dead branches early), autocomplete/search-suggestions, replace-words, and maximum-XOR-of-two-numbers (a binary trie over bits). If you only ever check whole-word membership, a hash set is simpler; the trie earns its keep the moment prefixes or shared structure matter.</p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">class Trie {
+    Trie[] kids = new Trie[26];
+    boolean end = false;
+
+    void insert(String w) {
+        Trie cur = this;
+        for (char c : w.toCharArray()) {
+            int i = c - 'a';
+            if (cur.kids[i] == null) cur.kids[i] = new Trie();
+            cur = cur.kids[i];
+        }
+        cur.end = true;
+    }
+    boolean search(String w) {
+        Trie n = walk(w);
+        return n != null &amp;&amp; n.end;
+    }
+    boolean startsWith(String p) { return walk(p) != null; }
+    private Trie walk(String s) {
+        Trie cur = this;
+        for (char c : s.toCharArray()) {
+            cur = cur.kids[c - 'a'];
+            if (cur == null) return null;
+        }
+        return cur;
+    }
+}</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">class Trie:
+    def __init__(self):
+        self.kids = {}        # char -> Trie
+        self.end = False
+
+    def insert(self, w):
+        cur = self
+        for c in w:
+            if c not in cur.kids:
+                cur.kids[c] = Trie()
+            cur = cur.kids[c]
+        cur.end = True
+
+    def _walk(self, s):
+        cur = self
+        for c in s:
+            if c not in cur.kids:
+                return None
+            cur = cur.kids[c]
+        return cur
+
+    def search(self, w):
+        n = self._walk(w)
+        return n is not None and n.end
+
+    def startsWith(self, p):
+        return self._walk(p) is not None</code></pre></div>
+</div>
+<p class="tip"><b>Tip:</b> Java's fixed <code class="inl">Trie[26]</code> array is fastest for lowercase-only inputs; Python's <code class="inl">dict</code>-of-children handles any alphabet and is more memory-flexible. Tries shine for autocomplete, word-search boards, and prefix-sum-of-strings problems — and pair naturally with DFS over a grid.</p>
+</section>
+
+<section id="dijkstra">
+<h2>Dijkstra (shortest path, weighted)</h2>
+<p class="why"><span class="h">When &amp; why</span>Dijkstra is BFS for <b>weighted graphs with non-negative edges</b>: instead of a plain queue it uses a min-heap to always expand the closest-so-far node, giving shortest paths in O(E log V). Use it for network-delay-time, cheapest-flights (with a hop limit), path-with-minimum-effort, and swim-in-rising-water. The required habit is the <b>stale-entry skip</b> (<code class="inl">if d &gt; dist[u]: continue</code>) because we push improved distances rather than decrease keys in place. If edges can be negative, Dijkstra breaks — use Bellman-Ford; if the graph is unweighted, plain BFS is simpler and faster.</p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">int[] dijkstra(List&lt;int[]&gt;[] adj, int src, int n) {
+    int[] dist = new int[n];
+    Arrays.fill(dist, Integer.MAX_VALUE);
+    dist[src] = 0;
+    // min-heap of {dist, node}:
+    PriorityQueue&lt;int[]&gt; pq =
+        new PriorityQueue&lt;&gt;((a,b) -&gt; a[0] - b[0]);
+    pq.offer(new int[]{0, src});
+    while (!pq.isEmpty()) {
+        int[] top = pq.poll();
+        int d = top[0], u = top[1];
+        if (d &gt; dist[u]) continue;       // stale entry
+        for (int[] e : adj[u]) {          // e = {v, w}
+            int v = e[0], w = e[1];
+            if (dist[u] + w &lt; dist[v]) {
+                dist[v] = dist[u] + w;
+                pq.offer(new int[]{dist[v], v});
+            }
+        }
+    }
+    return dist;
+}</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">import heapq
+
+def dijkstra(adj, src, n):
+    dist = [float('inf')] * n
+    dist[src] = 0
+    pq = [(0, src)]                  # (dist, node)
+    while pq:
+        d, u = heapq.heappop(pq)
+        if d &gt; dist[u]:
+            continue                 # stale entry
+        for v, w in adj[u]:
+            if dist[u] + w &lt; dist[v]:
+                dist[v] = dist[u] + w
+                heapq.heappush(pq, (dist[v], v))
+    return dist</code></pre></div>
+</div>
+<p class="tip"><b>Tip:</b> Always skip stale heap entries with the <code class="inl">if d &gt; dist[u]: continue</code> check — Dijkstra never decreases keys in place, it just pushes new better ones. Python's tuple ordering makes <code class="inl">(dist, node)</code> sort correctly for free. Dijkstra requires non-negative weights; with negatives use Bellman-Ford.</p>
+</section>
+
+<section id="topo">
+<h2>Topological sort (Kahn's BFS)</h2>
+<p class="why"><span class="h">When &amp; why</span>Topological sort linearizes a <b>directed acyclic graph</b> so that every edge points "forward" — exactly what you need for <i>ordering by dependency</i>: course-schedule (can you finish? in what order?), build systems, task scheduling with prerequisites, alien-dictionary. Kahn's BFS version (repeatedly remove zero-indegree nodes) doubles as cycle detection: if you can't output all <code class="inl">n</code> nodes, a cycle exists and no valid order does. Use it whenever the problem mentions "prerequisites," "depends on," or "must come before." O(V+E).</p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">// returns order, or empty list if a cycle exists:
+List&lt;Integer&gt; topo(List&lt;List&lt;Integer&gt;&gt; adj, int n) {
+    int[] indeg = new int[n];
+    for (List&lt;Integer&gt; nbrs : adj)
+        for (int v : nbrs) indeg[v]++;
+    Deque&lt;Integer&gt; q = new ArrayDeque&lt;&gt;();
+    for (int i = 0; i &lt; n; i++)
+        if (indeg[i] == 0) q.offer(i);
+    List&lt;Integer&gt; order = new ArrayList&lt;&gt;();
+    while (!q.isEmpty()) {
+        int u = q.poll();
+        order.add(u);
+        for (int v : adj.get(u))
+            if (--indeg[v] == 0) q.offer(v);
+    }
+    return order.size() == n ? order
+                             : new ArrayList&lt;&gt;();
+}</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">from collections import deque
+
+def topo(adj, n):
+    indeg = [0] * n
+    for nbrs in adj:
+        for v in nbrs:
+            indeg[v] += 1
+    q = deque(i for i in range(n) if indeg[i] == 0)
+    order = []
+    while q:
+        u = q.popleft()
+        order.append(u)
+        for v in adj[u]:
+            indeg[v] -= 1
+            if indeg[v] == 0:
+                q.append(v)
+    return order if len(order) == n else []  # [] = cycle</code></pre></div>
+</div>
+<p class="tip"><b>Tip:</b> Kahn's algorithm doubles as cycle detection: if the final order has fewer than <code class="inl">n</code> nodes, the graph has a cycle (e.g. Course Schedule — return false). Use it for build/dependency ordering and any "prerequisites" problem. A DFS-with-colors version gives the same result in reverse-postorder.</p>
+</section>
+<section id="complexity">
+<h2>Complexity reference</h2>
+<p class="why"><span class="h">When &amp; why</span>Interviewers always ask for time/space complexity, and the input size hints at the intended approach. Rough rule of thumb for a 1-second limit: <b>n ≤ 10</b> → exponential/backtracking is fine; <b>n ≤ 20</b> → bitmask DP (2ⁿ); <b>n ≤ 500</b> → O(n³); <b>n ≤ 5,000</b> → O(n²); <b>n ≤ 10⁶</b> → O(n log n) or O(n); <b>n ≥ 10⁹</b> → O(log n) or O(1) (binary search on the answer / math). Below are the per-operation costs of the structures you'll pick from.</p>
+<p class="note" style="margin-top:14px"><b>Data-structure operation costs (average case):</b></p>
+<table class="cx">
+<tr><th>Structure</th><th>Access</th><th>Search</th><th>Insert</th><th>Delete</th><th>Notes</th></tr>
+<tr><td>Array / ArrayList</td><td><code>O(1)</code></td><td><code>O(n)</code></td><td><code>O(1)*</code></td><td><code>O(n)</code></td><td>*append amortized; mid/front insert O(n)</td></tr>
+<tr><td>HashMap / dict</td><td>—</td><td><code>O(1)</code></td><td><code>O(1)</code></td><td><code>O(1)</code></td><td>worst case O(n) on collisions</td></tr>
+<tr><td>HashSet / set</td><td>—</td><td><code>O(1)</code></td><td><code>O(1)</code></td><td><code>O(1)</code></td><td>membership only</td></tr>
+<tr><td>TreeMap / TreeSet</td><td>—</td><td><code>O(log n)</code></td><td><code>O(log n)</code></td><td><code>O(log n)</code></td><td>sorted; floor/ceiling queries</td></tr>
+<tr><td>Stack / Queue / Deque</td><td>—</td><td><code>O(n)</code></td><td><code>O(1)</code></td><td><code>O(1)</code></td><td>push/pop/peek at ends O(1)</td></tr>
+<tr><td>Heap / PriorityQueue</td><td><code>O(1)</code> peek</td><td><code>O(n)</code></td><td><code>O(log n)</code></td><td><code>O(log n)</code></td><td>extract-min/max O(log n); build O(n)</td></tr>
+<tr><td>Balanced BST / SortedList</td><td>—</td><td><code>O(log n)</code></td><td><code>O(log n)</code></td><td><code>O(log n)</code></td><td>ordered iteration</td></tr>
+<tr><td>Trie</td><td>—</td><td><code>O(L)</code></td><td><code>O(L)</code></td><td><code>O(L)</code></td><td>L = key length, alphabet-independent</td></tr>
+<tr><td>Union-Find</td><td>—</td><td><code>O(α)</code></td><td><code>O(α)</code></td><td>—</td><td>α = inverse Ackermann ≈ O(1)</td></tr>
+</table>
+<p class="note" style="margin-top:16px"><b>Common algorithm costs:</b></p>
+<table class="cx">
+<tr><th>Algorithm</th><th>Time</th><th>Space</th><th>Use for</th></tr>
+<tr><td>Binary search</td><td><code>O(log n)</code></td><td><code>O(1)</code></td><td>sorted data / monotonic predicate</td></tr>
+<tr><td>Sorting (merge/Tim/quick)</td><td><code>O(n log n)</code></td><td><code>O(n)</code> / <code>O(log n)</code></td><td>setup for two-pointer, greedy</td></tr>
+<tr><td>Two pointers / sliding window</td><td><code>O(n)</code></td><td><code>O(1)</code></td><td>pairs, contiguous subarrays</td></tr>
+<tr><td>Prefix sums</td><td><code>O(n)</code> build, <code>O(1)</code> query</td><td><code>O(n)</code></td><td>range-sum queries</td></tr>
+<tr><td>BFS / DFS</td><td><code>O(V + E)</code></td><td><code>O(V)</code></td><td>traversal, connectivity, shortest (BFS)</td></tr>
+<tr><td>Dijkstra (heap)</td><td><code>O(E log V)</code></td><td><code>O(V)</code></td><td>weighted shortest path, ≥0 edges</td></tr>
+<tr><td>Topological sort</td><td><code>O(V + E)</code></td><td><code>O(V)</code></td><td>dependency ordering, cycle check</td></tr>
+<tr><td>Quickselect</td><td><code>O(n)</code> avg / <code>O(n²)</code> worst</td><td><code>O(1)</code></td><td>k-th element</td></tr>
+<tr><td>DP (typical)</td><td><code>O(states × transition)</code></td><td><code>O(states)</code></td><td>optimization / counting</td></tr>
+<tr><td>Backtracking</td><td>exponential</td><td><code>O(depth)</code></td><td>enumerate all solutions</td></tr>
+</table>
+</section>
+
+<section id="picker">
+<h2>Which structure / pattern should I use?</h2>
+<p class="why"><span class="h">How to use</span>When you read a problem, map its keywords to a tool. This table is the fastest path from "what is being asked" to "what to reach for." When two fit, the simpler one (hash map, sorting) is usually the intended answer; the fancy one (segment tree, trie) is for when the simple one is too slow.</p>
+<table class="cx">
+<tr><th>If the problem says / needs…</th><th>Reach for</th></tr>
+<tr><td>"have I seen it" / counts / two-sum-style lookup</td><td>HashMap / HashSet</td></tr>
+<tr><td>"k-th largest/smallest," "top K," running median</td><td>Heap (or Quickselect if array)</td></tr>
+<tr><td>sorted data, "find in," "first/last that…," "minimize the max"</td><td>Binary search (incl. on the answer)</td></tr>
+<tr><td>"contiguous subarray/substring" + longest/shortest/at most</td><td>Sliding window</td></tr>
+<tr><td>sorted array + "pair/triplet," in-place removal</td><td>Two pointers</td></tr>
+<tr><td>many range-sum queries / "subarray sum equals k"</td><td>Prefix sums (+ hash map)</td></tr>
+<tr><td>"next greater/smaller," histogram, window max</td><td>Monotonic stack / deque</td></tr>
+<tr><td>intervals, meetings, "max non-overlapping"</td><td>Sort + greedy / heap</td></tr>
+<tr><td>shortest steps in unweighted graph/grid</td><td>BFS</td></tr>
+<tr><td>weighted shortest path (≥0 edges)</td><td>Dijkstra (heap)</td></tr>
+<tr><td>connected components, "same group?," cycle (undirected)</td><td>Union-Find</td></tr>
+<tr><td>"prerequisites," "depends on," ordering, cycle (directed)</td><td>Topological sort</td></tr>
+<tr><td>explore regions, flood fill, all paths, tree aggregation</td><td>DFS</td></tr>
+<tr><td>"all permutations/subsets/combinations," N-Queens, Sudoku</td><td>Backtracking</td></tr>
+<tr><td>"max/min cost," "number of ways," overlapping subproblems</td><td>Dynamic programming</td></tr>
+<tr><td>prefix queries, autocomplete, word dictionary on a grid</td><td>Trie</td></tr>
+<tr><td>nesting, "valid parentheses," undo in reverse order</td><td>Stack</td></tr>
+<tr><td>subset enumeration (n ≤ 20), parity, XOR-of-pairs</td><td>Bitmask / bit tricks</td></tr>
+<tr><td>need sorted order + floor/ceiling / order-statistics</td><td>TreeMap / TreeSet / SortedList</td></tr>
+</table>
+</section>
+
+<section id="p-twosum">
+<h2>Two Sum &nbsp;<span style="font-size:12px;color:#2bb673;font-weight:600">● Easy · hash map</span></h2>
+<p class="sub">Given an array <code class="inl">nums</code> and a <code class="inl">target</code>, return indices of the two numbers that add up to target. Exactly one solution; can't reuse an element.</p>
+<p class="why"><span class="h">Approach</span>Brute force checks every pair — O(n²). Instead, make one pass with a hash map of <code class="inl">value → index</code>. For each number <code class="inl">x</code>, its partner is <code class="inl">target - x</code>; if you've already seen the partner, you're done. You trade O(n) space for O(n) time. <b>Time O(n), Space O(n).</b></p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">int[] twoSum(int[] nums, int target) {
+    Map&lt;Integer,Integer&gt; seen = new HashMap&lt;&gt;();
+    for (int i = 0; i &lt; nums.length; i++) {
+        int need = target - nums[i];
+        if (seen.containsKey(need))
+            return new int[]{seen.get(need), i};
+        seen.put(nums[i], i);          // store AFTER check
+    }
+    return new int[]{};                // no solution
+}</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">def two_sum(nums, target):
+    seen = {}                          # value -> index
+    for i, x in enumerate(nums):
+        need = target - x
+        if need in seen:
+            return [seen[need], i]
+        seen[x] = i                    # store AFTER check
+    return []</code></pre></div>
+</div>
+<p class="tip"><b>Key insight:</b> "find a pair that sums to k" → one-pass hash map of complements. Storing <i>after</i> the check prevents using the same element twice. This complement trick generalizes to 3Sum (sort + fix one + two-pointer).</p>
+</section>
+
+<section id="p-anagram">
+<h2>Valid Anagram &nbsp;<span style="font-size:12px;color:#2bb673;font-weight:600">● Easy · counting</span></h2>
+<p class="sub">Return true if string <code class="inl">t</code> is an anagram of <code class="inl">s</code> (same characters, same counts).</p>
+<p class="why"><span class="h">Approach</span>Two strings are anagrams iff their character-frequency tables are equal. For lowercase letters, an <code class="inl">int[26]</code> is fastest: +1 for each char in <code class="inl">s</code>, −1 for each in <code class="inl">t</code>; all zero ⇒ anagram. (Sorting both and comparing also works but is O(n log n).) <b>Time O(n), Space O(1)</b> (fixed 26).</p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">boolean isAnagram(String s, String t) {
+    if (s.length() != t.length()) return false;
+    int[] cnt = new int[26];
+    for (int i = 0; i &lt; s.length(); i++) {
+        cnt[s.charAt(i) - 'a']++;
+        cnt[t.charAt(i) - 'a']--;
+    }
+    for (int c : cnt) if (c != 0) return false;
+    return true;
+}</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">from collections import Counter
+def is_anagram(s, t):
+    return Counter(s) == Counter(t)
+
+# fixed-alphabet version (faster, O(1) space):
+def is_anagram_arr(s, t):
+    if len(s) != len(t): return False
+    cnt = [0] * 26
+    for cs, ct in zip(s, t):
+        cnt[ord(cs)-97] += 1
+        cnt[ord(ct)-97] -= 1
+    return all(c == 0 for c in cnt)</code></pre></div>
+</div>
+<p class="tip"><b>Key insight:</b> anagram = equal frequency tables. Length mismatch is an instant false. The <code class="inl">int[26]</code> increment/decrement trick avoids a second pass and beats sorting.</p>
+</section>
+
+<section id="p-stock">
+<h2>Best Time to Buy and Sell Stock &nbsp;<span style="font-size:12px;color:#2bb673;font-weight:600">● Easy · one pass</span></h2>
+<p class="sub">One transaction (buy once, sell later). Maximize profit from <code class="inl">prices[]</code>; return 0 if no profit.</p>
+<p class="why"><span class="h">Approach</span>Track the <b>minimum price seen so far</b> as you sweep left to right; at each day, the best profit selling today is <code class="inl">price - minSoFar</code>. Keep the max of those. You never need the future — the lowest buy is always behind you. <b>Time O(n), Space O(1).</b></p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">int maxProfit(int[] prices) {
+    int minPrice = Integer.MAX_VALUE, best = 0;
+    for (int p : prices) {
+        minPrice = Math.min(minPrice, p);   // best buy so far
+        best = Math.max(best, p - minPrice); // sell today
+    }
+    return best;
+}</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">def max_profit(prices):
+    min_price, best = float('inf'), 0
+    for p in prices:
+        min_price = min(min_price, p)        # best buy so far
+        best = max(best, p - min_price)      # sell today
+    return best</code></pre></div>
+</div>
+<p class="tip"><b>Key insight:</b> "max difference where the smaller comes first" → carry the running minimum and compare each element against it. This running-extreme pattern recurs in many array problems.</p>
+</section>
+
+<section id="p-paren">
+<h2>Valid Parentheses &nbsp;<span style="font-size:12px;color:#2bb673;font-weight:600">● Easy · stack</span></h2>
+<p class="sub">Given a string of <code class="inl">()[]{}</code>, decide if every bracket is properly closed and nested.</p>
+<p class="why"><span class="h">Approach</span>Nesting = "last opened, first closed" = a <b>stack</b>. Push opening brackets; on a closing bracket, the top of the stack must be its matching opener — otherwise invalid. At the end the stack must be empty. <b>Time O(n), Space O(n).</b></p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">boolean isValid(String s) {
+    Deque&lt;Character&gt; st = new ArrayDeque&lt;&gt;();
+    Map&lt;Character,Character&gt; pair = Map.of(')','(', ']','[', '}','{');
+    for (char c : s.toCharArray()) {
+        if (pair.containsKey(c)) {               // closing
+            if (st.isEmpty() || st.pop() != pair.get(c))
+                return false;
+        } else st.push(c);                        // opening
+    }
+    return st.isEmpty();
+}</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">def is_valid(s):
+    st = []
+    pair = {')':'(', ']':'[', '}':'{'}
+    for c in s:
+        if c in pair:                    # closing
+            if not st or st.pop() != pair[c]:
+                return False
+        else:
+            st.append(c)                 # opening
+    return not st</code></pre></div>
+</div>
+<p class="tip"><b>Key insight:</b> matched/nested structure → stack. Two failure modes: a closing bracket with the wrong/no opener on top, and leftover openers at the end (non-empty stack).</p>
+</section>
+
+<section id="p-mergelist">
+<h2>Merge Two Sorted Lists &nbsp;<span style="font-size:12px;color:#2bb673;font-weight:600">● Easy · linked list</span></h2>
+<p class="sub">Merge two sorted linked lists into one sorted list and return its head.</p>
+<p class="why"><span class="h">Approach</span>Use a <b>dummy head</b> to avoid special-casing the first node, and a <code class="inl">tail</code> pointer you keep appending to. Walk both lists, always attaching the smaller current node and advancing that list; finally attach whatever remains. <b>Time O(n+m), Space O(1).</b></p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">ListNode merge(ListNode a, ListNode b) {
+    ListNode dummy = new ListNode(0), tail = dummy;
+    while (a != null &amp;&amp; b != null) {
+        if (a.val &lt;= b.val) { tail.next = a; a = a.next; }
+        else                { tail.next = b; b = b.next; }
+        tail = tail.next;
+    }
+    tail.next = (a != null) ? a : b;     // attach the rest
+    return dummy.next;
+}</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">def merge(a, b):
+    dummy = tail = ListNode(0)
+    while a and b:
+        if a.val &lt;= b.val:
+            tail.next, a = a, a.next
+        else:
+            tail.next, b = b, b.next
+        tail = tail.next
+    tail.next = a or b                   # attach the rest
+    return dummy.next</code></pre></div>
+</div>
+<p class="tip"><b>Key insight:</b> the dummy-head + tail pointer pattern removes all the "is this the first node?" edge cases — use it for almost every linked-list build. The same merge step is the core of merge sort and "merge k lists" (with a heap).</p>
+</section>
+
+<section id="p-kadane">
+<h2>Maximum Subarray (Kadane) &nbsp;<span style="font-size:12px;color:#f0a32a;font-weight:600">● Medium · DP</span></h2>
+<p class="sub">Find the contiguous subarray with the largest sum; return that sum.</p>
+<p class="why"><span class="h">Approach</span>Kadane's: at each index decide whether to <b>extend</b> the running subarray or <b>start fresh</b> at the current element — <code class="inl">cur = max(x, cur + x)</code>. Track the best <code class="inl">cur</code> ever seen. Intuition: a negative running sum can only hurt what follows, so drop it. <b>Time O(n), Space O(1).</b></p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">int maxSubArray(int[] nums) {
+    int cur = nums[0], best = nums[0];
+    for (int i = 1; i &lt; nums.length; i++) {
+        cur = Math.max(nums[i], cur + nums[i]); // extend or restart
+        best = Math.max(best, cur);
+    }
+    return best;
+}</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">def max_sub_array(nums):
+    cur = best = nums[0]
+    for x in nums[1:]:
+        cur = max(x, cur + x)            # extend or restart
+        best = max(best, cur)
+    return best</code></pre></div>
+</div>
+<p class="tip"><b>Key insight:</b> "best contiguous sum" → Kadane. The decision <code class="inl">max(x, cur+x)</code> is the whole algorithm: if the running sum has gone negative, abandon it. To also return the indices, record where <code class="inl">cur</code> reset.</p>
+</section>
+
+<section id="p-product">
+<h2>Product of Array Except Self &nbsp;<span style="font-size:12px;color:#f0a32a;font-weight:600">● Medium · prefix</span></h2>
+<p class="sub">Return <code class="inl">out[i]</code> = product of all elements except <code class="inl">nums[i]</code>, <b>without division</b> and in O(n).</p>
+<p class="why"><span class="h">Approach</span><code class="inl">out[i]</code> = (product of everything to the left) × (everything to the right). Do a left-to-right pass filling prefix products, then a right-to-left pass multiplying in the suffix product on the fly. No division (handles zeros), O(1) extra space beyond the output. <b>Time O(n), Space O(1).</b></p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">int[] productExceptSelf(int[] nums) {
+    int n = nums.length;
+    int[] out = new int[n];
+    out[0] = 1;
+    for (int i = 1; i &lt; n; i++)           // prefix products
+        out[i] = out[i-1] * nums[i-1];
+    int right = 1;
+    for (int i = n-1; i &gt;= 0; i--) {       // multiply suffix
+        out[i] *= right;
+        right *= nums[i];
+    }
+    return out;
+}</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">def product_except_self(nums):
+    n = len(nums)
+    out = [1] * n
+    for i in range(1, n):                 # prefix products
+        out[i] = out[i-1] * nums[i-1]
+    right = 1
+    for i in range(n-1, -1, -1):          # multiply suffix
+        out[i] *= right
+        right *= nums[i]
+    return out</code></pre></div>
+</div>
+<p class="tip"><b>Key insight:</b> when division is banned, think <b>prefix × suffix</b>. Reusing the output array for the prefix pass, then folding in the suffix with a single running variable, gives O(1) extra space.</p>
+</section>
+
+<section id="p-lengthsub">
+<h2>Longest Substring Without Repeating Characters &nbsp;<span style="font-size:12px;color:#f0a32a;font-weight:600">● Medium · sliding window</span></h2>
+<p class="sub">Length of the longest substring with all distinct characters.</p>
+<p class="why"><span class="h">Approach</span>Sliding window with a map of each char's last index. Expand <code class="inl">right</code>; when you hit a char already inside the window, jump <code class="inl">left</code> past its previous position. The window <code class="inl">[left, right]</code> always holds distinct chars; track its max length. Each char is visited once. <b>Time O(n), Space O(min(n, alphabet)).</b></p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">int lengthOfLongestSubstring(String s) {
+    Map&lt;Character,Integer&gt; last = new HashMap&lt;&gt;();
+    int left = 0, best = 0;
+    for (int right = 0; right &lt; s.length(); right++) {
+        char c = s.charAt(right);
+        if (last.containsKey(c) &amp;&amp; last.get(c) &gt;= left)
+            left = last.get(c) + 1;        // shrink past dup
+        last.put(c, right);
+        best = Math.max(best, right - left + 1);
+    }
+    return best;
+}</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">def length_of_longest_substring(s):
+    last = {}
+    left = best = 0
+    for right, c in enumerate(s):
+        if c in last and last[c] &gt;= left:
+            left = last[c] + 1             # shrink past dup
+        last[c] = right
+        best = max(best, right - left + 1)
+    return best</code></pre></div>
+</div>
+<p class="tip"><b>Key insight:</b> "longest substring with property X" → sliding window. The <code class="inl">last[c] &gt;= left</code> guard matters: only jump <code class="inl">left</code> if the duplicate is <i>inside</i> the current window, not behind it.</p>
+</section>
+<section id="p-groupana">
+<h2>Group Anagrams &nbsp;<span style="font-size:12px;color:#f0a32a;font-weight:600">● Medium · hash map</span></h2>
+<p class="sub">Group strings that are anagrams of each other.</p>
+<p class="why"><span class="h">Approach</span>All anagrams share a <b>canonical key</b>. Use the sorted string (or a 26-count signature) as a map key and bucket words under it. Sorted key is O(k log k) per word; the count-signature key is O(k). <b>Time O(n·k log k), Space O(n·k).</b></p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">List&lt;List&lt;String&gt;&gt; groupAnagrams(String[] strs) {
+    Map&lt;String,List&lt;String&gt;&gt; m = new HashMap&lt;&gt;();
+    for (String w : strs) {
+        char[] a = w.toCharArray();
+        Arrays.sort(a);
+        String key = new String(a);            // canonical
+        m.computeIfAbsent(key, k -&gt; new ArrayList&lt;&gt;()).add(w);
+    }
+    return new ArrayList&lt;&gt;(m.values());
+}</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">from collections import defaultdict
+def group_anagrams(strs):
+    m = defaultdict(list)
+    for w in strs:
+        key = "".join(sorted(w))          # canonical key
+        m[key].append(w)
+    return list(m.values())
+# faster key: tuple of 26 counts -> O(k) per word</code></pre></div>
+</div>
+<p class="tip"><b>Key insight:</b> "group things that are equivalent under some transform" → map from a <b>canonical form</b> to a bucket. Sorted string or a 26-count tuple both collapse anagrams to the same key.</p>
+</section>
+
+<section id="p-topk">
+<h2>Top K Frequent Elements &nbsp;<span style="font-size:12px;color:#f0a32a;font-weight:600">● Medium · heap / bucket</span></h2>
+<p class="sub">Return the <code class="inl">k</code> most frequent elements in <code class="inl">nums</code>.</p>
+<p class="why"><span class="h">Approach</span>Count frequencies, then pick the top k. A size-k <b>min-heap</b> of (freq, value) gives O(n log k). Even better, <b>bucket sort</b> by frequency (index = count, since count ≤ n) gives O(n). <b>Time O(n) bucket / O(n log k) heap.</b></p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">int[] topKFrequent(int[] nums, int k) {
+    Map&lt;Integer,Integer&gt; cnt = new HashMap&lt;&gt;();
+    for (int x : nums) cnt.merge(x, 1, Integer::sum);
+    // min-heap of size k by frequency
+    PriorityQueue&lt;int[]&gt; pq =
+        new PriorityQueue&lt;&gt;((a,b) -&gt; a[1] - b[1]);
+    for (var e : cnt.entrySet()) {
+        pq.offer(new int[]{e.getKey(), e.getValue()});
+        if (pq.size() &gt; k) pq.poll();          // drop smallest
+    }
+    int[] res = new int[k];
+    for (int i = 0; i &lt; k; i++) res[i] = pq.poll()[0];
+    return res;
+}</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">from collections import Counter
+import heapq
+def top_k_frequent(nums, k):
+    cnt = Counter(nums)
+    return [v for v, _ in cnt.most_common(k)]
+
+# bucket sort, O(n):
+def top_k_bucket(nums, k):
+    cnt = Counter(nums)
+    buckets = [[] for _ in range(len(nums) + 1)]
+    for v, c in cnt.items():
+        buckets[c].append(v)
+    res = []
+    for c in range(len(buckets) - 1, 0, -1):
+        res += buckets[c]
+        if len(res) &gt;= k: return res[:k]</code></pre></div>
+</div>
+<p class="tip"><b>Key insight:</b> "top K" → size-K heap (keep the heap small, not size-n). When the score is a bounded integer (a frequency ≤ n), <b>bucket sort by that score</b> beats the heap at O(n).</p>
+</section>
+
+<section id="p-islands">
+<h2>Number of Islands &nbsp;<span style="font-size:12px;color:#f0a32a;font-weight:600">● Medium · BFS / DFS</span></h2>
+<p class="sub">Count connected groups of <code class="inl">'1'</code> (land) in a grid of <code class="inl">'1'</code>/<code class="inl">'0'</code> (4-directional).</p>
+<p class="why"><span class="h">Approach</span>Scan every cell; when you find unvisited land, that's a new island — run a flood fill (DFS/BFS) that sinks the whole connected component (mark visited or set to <code class="inl">'0'</code>) so you don't count it again. <b>Time O(R·C), Space O(R·C)</b> worst case (recursion/queue).</p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">int numIslands(char[][] g) {
+    int R = g.length, C = g[0].length, count = 0;
+    for (int r = 0; r &lt; R; r++)
+        for (int c = 0; c &lt; C; c++)
+            if (g[r][c] == '1') { count++; dfs(g, r, c); }
+    return count;
+}
+void dfs(char[][] g, int r, int c) {
+    if (r&lt;0||r&gt;=g.length||c&lt;0||c&gt;=g[0].length||g[r][c]!='1') return;
+    g[r][c] = '0';                       // sink it
+    dfs(g,r+1,c); dfs(g,r-1,c); dfs(g,r,c+1); dfs(g,r,c-1);
+}</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">def num_islands(g):
+    R, C = len(g), len(g[0])
+    def dfs(r, c):
+        if r&lt;0 or r&gt;=R or c&lt;0 or c&gt;=C or g[r][c] != '1':
+            return
+        g[r][c] = '0'                    # sink it
+        dfs(r+1,c); dfs(r-1,c); dfs(r,c+1); dfs(r,c-1)
+    count = 0
+    for r in range(R):
+        for c in range(C):
+            if g[r][c] == '1':
+                count += 1
+                dfs(r, c)
+    return count</code></pre></div>
+</div>
+<p class="tip"><b>Key insight:</b> "count connected components in a grid" → flood fill each new unvisited cell and sink its whole region. Sinking in place (set to <code class="inl">'0'</code>) saves a visited matrix. Union-Find is an alternative if the grid mutates over time.</p>
+</section>
+
+<section id="p-course">
+<h2>Course Schedule &nbsp;<span style="font-size:12px;color:#f0a32a;font-weight:600">● Medium · topological sort</span></h2>
+<p class="sub">Given <code class="inl">numCourses</code> and prerequisite pairs <code class="inl">[a, b]</code> (b before a), can you finish all courses?</p>
+<p class="why"><span class="h">Approach</span>This is "does a directed graph have a cycle?" Build the graph, compute in-degrees, and run <b>Kahn's BFS</b>: repeatedly remove zero-in-degree nodes. If you process all N nodes, no cycle → finishable; if fewer, a cycle blocks it. <b>Time O(V+E), Space O(V+E).</b></p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">boolean canFinish(int n, int[][] prereq) {
+    List&lt;List&lt;Integer&gt;&gt; adj = new ArrayList&lt;&gt;();
+    for (int i = 0; i &lt; n; i++) adj.add(new ArrayList&lt;&gt;());
+    int[] indeg = new int[n];
+    for (int[] p : prereq) { adj.get(p[1]).add(p[0]); indeg[p[0]]++; }
+    Deque&lt;Integer&gt; q = new ArrayDeque&lt;&gt;();
+    for (int i = 0; i &lt; n; i++) if (indeg[i]==0) q.offer(i);
+    int done = 0;
+    while (!q.isEmpty()) {
+        int u = q.poll(); done++;
+        for (int v : adj.get(u)) if (--indeg[v]==0) q.offer(v);
+    }
+    return done == n;                    // all processed = no cycle
+}</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">from collections import deque
+def can_finish(n, prereq):
+    adj = [[] for _ in range(n)]
+    indeg = [0] * n
+    for a, b in prereq:
+        adj[b].append(a); indeg[a] += 1
+    q = deque(i for i in range(n) if indeg[i] == 0)
+    done = 0
+    while q:
+        u = q.popleft(); done += 1
+        for v in adj[u]:
+            indeg[v] -= 1
+            if indeg[v] == 0: q.append(v)
+    return done == n                     # all processed = no cycle</code></pre></div>
+</div>
+<p class="tip"><b>Key insight:</b> "prerequisites / ordering / can it be done" → topological sort, and "fewer than N processed ⇒ cycle" is the finishability test. The variant that returns the order just collects nodes as you pop them.</p>
+</section>
+
+<section id="p-coin">
+<h2>Coin Change &nbsp;<span style="font-size:12px;color:#f0a32a;font-weight:600">● Medium · DP</span></h2>
+<p class="sub">Fewest coins from <code class="inl">coins[]</code> to make <code class="inl">amount</code>; return −1 if impossible.</p>
+<p class="why"><span class="h">Approach</span>Unbounded-knapsack DP. <code class="inl">dp[x]</code> = min coins to make <code class="inl">x</code>. For each amount <code class="inl">x</code>, try every coin: <code class="inl">dp[x] = min(dp[x], dp[x-coin] + 1)</code>. Initialize to "infinity," <code class="inl">dp[0]=0</code>. Greedy fails (e.g. coins {1,3,4}, amount 6), so DP is required. <b>Time O(amount × coins), Space O(amount).</b></p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">int coinChange(int[] coins, int amount) {
+    int[] dp = new int[amount + 1];
+    Arrays.fill(dp, amount + 1);          // "infinity"
+    dp[0] = 0;
+    for (int x = 1; x &lt;= amount; x++)
+        for (int c : coins)
+            if (c &lt;= x) dp[x] = Math.min(dp[x], dp[x-c] + 1);
+    return dp[amount] &gt; amount ? -1 : dp[amount];
+}</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">def coin_change(coins, amount):
+    dp = [amount + 1] * (amount + 1)      # "infinity"
+    dp[0] = 0
+    for x in range(1, amount + 1):
+        for c in coins:
+            if c &lt;= x:
+                dp[x] = min(dp[x], dp[x-c] + 1)
+    return -1 if dp[amount] &gt; amount else dp[amount]</code></pre></div>
+</div>
+<p class="tip"><b>Key insight:</b> "fewest/number of ways to reach a target from reusable parts" → unbounded-knapsack DP over amounts. Greedy (largest coin first) is a trap — it fails for non-canonical coin systems, so reach for DP.</p>
+</section>
+
+<section id="p-intervals">
+<h2>Merge Intervals &nbsp;<span style="font-size:12px;color:#f0a32a;font-weight:600">● Medium · sort + greedy</span></h2>
+<p class="sub">Merge all overlapping intervals in <code class="inl">[[start,end],…]</code>.</p>
+<p class="why"><span class="h">Approach</span><b>Sort by start.</b> Sweep once: if the current interval overlaps the last one in the output (<code class="inl">cur.start ≤ last.end</code>), extend <code class="inl">last.end</code>; otherwise append a new interval. Sorting makes overlaps adjacent, so one pass suffices. <b>Time O(n log n), Space O(n).</b></p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">int[][] merge(int[][] iv) {
+    Arrays.sort(iv, (a,b) -&gt; Integer.compare(a[0], b[0]));
+    List&lt;int[]&gt; out = new ArrayList&lt;&gt;();
+    for (int[] cur : iv) {
+        if (out.isEmpty() || out.get(out.size()-1)[1] &lt; cur[0])
+            out.add(cur);                          // no overlap
+        else
+            out.get(out.size()-1)[1] =
+                Math.max(out.get(out.size()-1)[1], cur[1]);
+    }
+    return out.toArray(new int[0][]);
+}</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">def merge(intervals):
+    intervals.sort(key=lambda x: x[0])
+    out = []
+    for cur in intervals:
+        if not out or out[-1][1] &lt; cur[0]:
+            out.append(cur[:])            # no overlap
+        else:
+            out[-1][1] = max(out[-1][1], cur[1])
+    return out</code></pre></div>
+</div>
+<p class="tip"><b>Key insight:</b> almost every interval problem starts with <b>sort by start</b> (to merge) or <b>by end</b> (to schedule the max non-overlapping). After sorting, a single linear sweep does the work.</p>
+</section>
+
+<section id="p-lru">
+<h2>LRU Cache &nbsp;<span style="font-size:12px;color:#f0a32a;font-weight:600">● Medium · design (hashmap + DLL)</span></h2>
+<p class="sub">Design a cache with O(1) <code class="inl">get</code> and <code class="inl">put</code> that evicts the least-recently-used key at capacity.</p>
+<p class="why"><span class="h">Approach</span>Combine a <b>hash map</b> (key → node, O(1) lookup) with a <b>doubly linked list</b> ordered by recency (most-recent at the head, LRU at the tail). Every access moves the node to the head; eviction removes the tail. <b>Time O(1) per op.</b></p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">class LRUCache extends LinkedHashMap&lt;Integer,Integer&gt; {
+    private final int cap;
+    LRUCache(int capacity) {
+        super(capacity, 0.75f, true);     // accessOrder = true
+        this.cap = capacity;
+    }
+    public int get(int key) { return super.getOrDefault(key, -1); }
+    public void put(int key, int val) { super.put(key, val); }
+    protected boolean removeEldestEntry(Map.Entry&lt;Integer,Integer&gt; e) {
+        return size() &gt; cap;              // auto-evict LRU
+    }
+}
+// Interview-preferred: hand-roll HashMap + doubly linked list.</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">from collections import OrderedDict
+class LRUCache:
+    def __init__(self, capacity):
+        self.cap = capacity
+        self.d = OrderedDict()            # insertion = recency
+    def get(self, key):
+        if key not in self.d: return -1
+        self.d.move_to_end(key)           # mark most-recent
+        return self.d[key]
+    def put(self, key, val):
+        if key in self.d:
+            self.d.move_to_end(key)
+        self.d[key] = val
+        if len(self.d) &gt; self.cap:
+            self.d.popitem(last=False)    # evict LRU (front)</code></pre></div>
+</div>
+<p class="tip"><b>Key insight:</b> O(1) get/put with recency ordering needs <b>two structures together</b>: a hash map for lookup + a doubly linked list (or ordered map) for recency. The library types (<code class="inl">LinkedHashMap</code>, <code class="inl">OrderedDict</code>) are fine in practice, but interviewers usually want the hand-rolled hashmap-plus-DLL.</p>
+</section>
+
+<section id="p-rainwater">
+<h2>Trapping Rain Water &nbsp;<span style="font-size:12px;color:#e0544e;font-weight:600">● Hard · two pointers</span></h2>
+<p class="sub">Given bar heights, compute how much water is trapped after raining.</p>
+<p class="why"><span class="h">Approach</span>Water above bar <code class="inl">i</code> = <code class="inl">min(maxLeft, maxRight) - height[i]</code>. The O(n)/O(1) trick: two pointers from both ends moving inward, advancing the <b>smaller</b> side — because that side's running max is the true bound. Track <code class="inl">leftMax</code>/<code class="inl">rightMax</code> and add the gap. <b>Time O(n), Space O(1).</b></p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">int trap(int[] h) {
+    int l = 0, r = h.length - 1, lm = 0, rm = 0, water = 0;
+    while (l &lt; r) {
+        if (h[l] &lt; h[r]) {                // left side bounds
+            lm = Math.max(lm, h[l]);
+            water += lm - h[l];
+            l++;
+        } else {                          // right side bounds
+            rm = Math.max(rm, h[r]);
+            water += rm - h[r];
+            r--;
+        }
+    }
+    return water;
+}</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">def trap(h):
+    l, r = 0, len(h) - 1
+    lm = rm = water = 0
+    while l &lt; r:
+        if h[l] &lt; h[r]:                   # left side bounds
+            lm = max(lm, h[l])
+            water += lm - h[l]
+            l += 1
+        else:                            # right side bounds
+            rm = max(rm, h[r])
+            water += rm - h[r]
+            r -= 1
+    return water</code></pre></div>
+</div>
+<p class="tip"><b>Key insight:</b> water at each bar is bounded by the shorter of the tallest walls on either side. Moving the smaller pointer inward guarantees that side's max is final, so you can commit the water there — that's why two pointers collapse this from O(n) space (precomputed maxes) to O(1).</p>
+</section>
+
+<section id="p-3sum">
+<h2>3Sum &nbsp;<span style="font-size:12px;color:#f0a32a;font-weight:600">● Medium · sort + two pointers</span></h2>
+<p class="sub">Find all unique triplets <code class="inl">[a,b,c]</code> in <code class="inl">nums</code> with <code class="inl">a+b+c = 0</code>.</p>
+<p class="why"><span class="h">Approach</span>Sort the array. Fix the first element <code class="inl">i</code>, then two-pointer the rest for pairs summing to <code class="inl">-nums[i]</code>. Sorting lets you move pointers by comparison and, crucially, <b>skip duplicates</b> to avoid repeat triplets. <b>Time O(n²), Space O(1)</b> (besides output).</p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">List&lt;List&lt;Integer&gt;&gt; threeSum(int[] nums) {
+    Arrays.sort(nums);
+    List&lt;List&lt;Integer&gt;&gt; res = new ArrayList&lt;&gt;();
+    for (int i = 0; i &lt; nums.length - 2; i++) {
+        if (i &gt; 0 &amp;&amp; nums[i] == nums[i-1]) continue;  // skip dup
+        int l = i + 1, r = nums.length - 1;
+        while (l &lt; r) {
+            int sum = nums[i] + nums[l] + nums[r];
+            if (sum == 0) {
+                res.add(Arrays.asList(nums[i], nums[l], nums[r]));
+                while (l &lt; r &amp;&amp; nums[l]==nums[l+1]) l++;
+                while (l &lt; r &amp;&amp; nums[r]==nums[r-1]) r--;
+                l++; r--;
+            } else if (sum &lt; 0) l++;
+            else r--;
+        }
+    }
+    return res;
+}</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">def three_sum(nums):
+    nums.sort()
+    res = []
+    for i in range(len(nums) - 2):
+        if i &gt; 0 and nums[i] == nums[i-1]:
+            continue                       # skip dup
+        l, r = i + 1, len(nums) - 1
+        while l &lt; r:
+            s = nums[i] + nums[l] + nums[r]
+            if s == 0:
+                res.append([nums[i], nums[l], nums[r]])
+                while l &lt; r and nums[l]==nums[l+1]: l += 1
+                while l &lt; r and nums[r]==nums[r-1]: r -= 1
+                l += 1; r -= 1
+            elif s &lt; 0: l += 1
+            else: r -= 1
+    return res</code></pre></div>
+</div>
+<p class="tip"><b>Key insight:</b> kSum → sort, fix outer elements, two-pointer the inner. The duplicate-skipping (both for the fixed index and after a hit) is what makes the triplets unique without a set. Generalizes to 4Sum (fix two, two-pointer two).</p>
+</section>
+
+<section id="p-rotated">
+<h2>Search in Rotated Sorted Array &nbsp;<span style="font-size:12px;color:#f0a32a;font-weight:600">● Medium · binary search</span></h2>
+<p class="sub">A sorted array rotated at an unknown pivot; find <code class="inl">target</code>'s index in O(log n) or −1.</p>
+<p class="why"><span class="h">Approach</span>Binary search still works because at any midpoint, <b>at least one half is sorted</b>. Check which half is sorted (compare <code class="inl">nums[lo]</code> to <code class="inl">nums[mid]</code>), test whether the target lies within that sorted half, and discard the other half. <b>Time O(log n), Space O(1).</b></p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">int search(int[] a, int target) {
+    int lo = 0, hi = a.length - 1;
+    while (lo &lt;= hi) {
+        int mid = (lo + hi) &gt;&gt;&gt; 1;
+        if (a[mid] == target) return mid;
+        if (a[lo] &lt;= a[mid]) {            // left half sorted
+            if (a[lo] &lt;= target &amp;&amp; target &lt; a[mid]) hi = mid - 1;
+            else lo = mid + 1;
+        } else {                          // right half sorted
+            if (a[mid] &lt; target &amp;&amp; target &lt;= a[hi]) lo = mid + 1;
+            else hi = mid - 1;
+        }
+    }
+    return -1;
+}</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">def search(a, target):
+    lo, hi = 0, len(a) - 1
+    while lo &lt;= hi:
+        mid = (lo + hi) // 2
+        if a[mid] == target:
+            return mid
+        if a[lo] &lt;= a[mid]:               # left half sorted
+            if a[lo] &lt;= target &lt; a[mid]: hi = mid - 1
+            else: lo = mid + 1
+        else:                            # right half sorted
+            if a[mid] &lt; target &lt;= a[hi]: lo = mid + 1
+            else: hi = mid - 1
+    return -1</code></pre></div>
+</div>
+<p class="tip"><b>Key insight:</b> rotation doesn't kill binary search — one side of <code class="inl">mid</code> is always sorted, so decide which side to keep by checking if the target falls in the sorted half. This "identify the sorted half" idea also solves find-minimum-in-rotated-array.</p>
+</section>
+
+<section id="p-levelorder">
+<h2>Binary Tree Level Order Traversal &nbsp;<span style="font-size:12px;color:#f0a32a;font-weight:600">● Medium · BFS</span></h2>
+<p class="sub">Return node values grouped by level (top to bottom).</p>
+<p class="why"><span class="h">Approach</span>BFS with a queue, processing one level at a time: snapshot the queue size at the start of each round so you know exactly how many nodes belong to the current level. <b>Time O(n), Space O(n).</b></p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">List&lt;List&lt;Integer&gt;&gt; levelOrder(TreeNode root) {
+    List&lt;List&lt;Integer&gt;&gt; res = new ArrayList&lt;&gt;();
+    if (root == null) return res;
+    Deque&lt;TreeNode&gt; q = new ArrayDeque&lt;&gt;();
+    q.offer(root);
+    while (!q.isEmpty()) {
+        int sz = q.size();               // nodes in this level
+        List&lt;Integer&gt; level = new ArrayList&lt;&gt;();
+        for (int i = 0; i &lt; sz; i++) {
+            TreeNode n = q.poll();
+            level.add(n.val);
+            if (n.left != null)  q.offer(n.left);
+            if (n.right != null) q.offer(n.right);
+        }
+        res.add(level);
+    }
+    return res;
+}</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">from collections import deque
+def level_order(root):
+    res = []
+    if not root: return res
+    q = deque([root])
+    while q:
+        level = []
+        for _ in range(len(q)):          # nodes in this level
+            n = q.popleft()
+            level.append(n.val)
+            if n.left:  q.append(n.left)
+            if n.right: q.append(n.right)
+        res.append(level)
+    return res</code></pre></div>
+</div>
+<p class="tip"><b>Key insight:</b> "by level / by depth" on a tree → BFS with the level-size snapshot loop. The same skeleton gives zigzag (reverse alternate levels), right-side view (last node per level), and level averages.</p>
+</section>
+
+<section id="p-validbst">
+<h2>Validate Binary Search Tree &nbsp;<span style="font-size:12px;color:#f0a32a;font-weight:600">● Medium · tree + bounds</span></h2>
+<p class="sub">Return true if a binary tree is a valid BST (every node in range, not just vs its parent).</p>
+<p class="why"><span class="h">Approach</span>The trap: checking only <code class="inl">node &gt; left</code> and <code class="inl">node &lt; right</code> is wrong — a deep descendant can violate an ancestor's bound. Pass down a valid <code class="inl">(low, high)</code> range and tighten it as you recurse. (Alternatively, an inorder traversal of a BST must be strictly increasing.) <b>Time O(n), Space O(h).</b></p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">boolean isValidBST(TreeNode root) {
+    return valid(root, Long.MIN_VALUE, Long.MAX_VALUE);
+}
+boolean valid(TreeNode n, long low, long high) {
+    if (n == null) return true;
+    if (n.val &lt;= low || n.val &gt;= high) return false;
+    return valid(n.left, low, n.val)        // tighten high
+        &amp;&amp; valid(n.right, n.val, high);     // tighten low
+}</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">def is_valid_bst(root):
+    def valid(n, low, high):
+        if not n:
+            return True
+        if not (low &lt; n.val &lt; high):
+            return False
+        return (valid(n.left, low, n.val) and   # tighten high
+                valid(n.right, n.val, high))     # tighten low
+    return valid(root, float('-inf'), float('inf'))</code></pre></div>
+</div>
+<p class="tip"><b>Key insight:</b> validate against an inherited <b>(low, high) range</b>, not just the immediate parent — that's the classic bug. Use <code class="inl">long</code>/<code class="inl">inf</code> sentinels so boundary values (Integer.MIN/MAX) don't false-fail. Inorder-must-be-increasing is the elegant alternative.</p>
+</section>
+
+<section id="p-clonegraph">
+<h2>Clone Graph &nbsp;<span style="font-size:12px;color:#f0a32a;font-weight:600">● Medium · graph traversal + map</span></h2>
+<p class="sub">Deep-copy a connected undirected graph (each node has a value and a list of neighbors).</p>
+<p class="why"><span class="h">Approach</span>Traverse (DFS or BFS) while keeping a <b>map from original node → its clone</b>. The map both prevents infinite loops on cycles and lets you wire cloned neighbors. Create a clone on first visit, then recurse/enqueue neighbors. <b>Time O(V+E), Space O(V).</b></p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">Map&lt;Node,Node&gt; seen = new HashMap&lt;&gt;();
+Node cloneGraph(Node node) {
+    if (node == null) return null;
+    if (seen.containsKey(node)) return seen.get(node);
+    Node copy = new Node(node.val);
+    seen.put(node, copy);                 // record BEFORE recursing
+    for (Node nb : node.neighbors)
+        copy.neighbors.add(cloneGraph(nb));
+    return copy;
+}</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">def clone_graph(node):
+    seen = {}
+    def dfs(n):
+        if n is None:
+            return None
+        if n in seen:
+            return seen[n]
+        copy = Node(n.val)
+        seen[n] = copy                    # record BEFORE recursing
+        for nb in n.neighbors:
+            copy.neighbors.append(dfs(nb))
+        return copy
+    return dfs(node)</code></pre></div>
+</div>
+<p class="tip"><b>Key insight:</b> any "copy/traverse a graph with cycles" task needs a <b>visited map keyed by the original node</b>, recorded <i>before</i> you recurse into neighbors — otherwise a cycle loops forever. The same old→new map pattern solves "copy list with random pointer."</p>
+</section>
+
+<section id="p-rob">
+<h2>House Robber &nbsp;<span style="font-size:12px;color:#f0a32a;font-weight:600">● Medium · DP</span></h2>
+<p class="sub">Max sum of non-adjacent elements (can't rob two adjacent houses).</p>
+<p class="why"><span class="h">Approach</span>At each house, choose: <b>skip</b> it (keep best so far) or <b>rob</b> it (its value + best up to two houses back). <code class="inl">dp[i] = max(dp[i-1], dp[i-2] + nums[i])</code>. Only the last two values are needed → O(1) space. <b>Time O(n), Space O(1).</b></p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">int rob(int[] nums) {
+    int prev2 = 0, prev1 = 0;             // dp[i-2], dp[i-1]
+    for (int x : nums) {
+        int cur = Math.max(prev1, prev2 + x); // skip vs rob
+        prev2 = prev1;
+        prev1 = cur;
+    }
+    return prev1;
+}</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">def rob(nums):
+    prev2 = prev1 = 0                     # dp[i-2], dp[i-1]
+    for x in nums:
+        prev2, prev1 = prev1, max(prev1, prev2 + x)
+    return prev1</code></pre></div>
+</div>
+<p class="tip"><b>Key insight:</b> "pick non-adjacent to maximize" → the skip-vs-take linear DP, space-optimized to two rolling variables. Variants: House Robber II (circular → run it twice, excluding first or last), and the tree version (rob/not-rob returned per node).</p>
+</section>
+
+<section id="p-wordbreak">
+<h2>Word Break &nbsp;<span style="font-size:12px;color:#f0a32a;font-weight:600">● Medium · DP on strings</span></h2>
+<p class="sub">Can <code class="inl">s</code> be segmented into a space-separated sequence of words from a dictionary?</p>
+<p class="why"><span class="h">Approach</span><code class="inl">dp[i]</code> = "can the prefix <code class="inl">s[0..i)</code> be fully segmented?" It's true if some <code class="inl">j &lt; i</code> has <code class="inl">dp[j]</code> true and <code class="inl">s[j..i)</code> is a dictionary word. Base <code class="inl">dp[0]=true</code> (empty). <b>Time O(n²·k), Space O(n).</b></p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">boolean wordBreak(String s, List&lt;String&gt; wordDict) {
+    Set&lt;String&gt; dict = new HashSet&lt;&gt;(wordDict);
+    int n = s.length();
+    boolean[] dp = new boolean[n + 1];
+    dp[0] = true;                         // empty prefix
+    for (int i = 1; i &lt;= n; i++)
+        for (int j = 0; j &lt; i; j++)
+            if (dp[j] &amp;&amp; dict.contains(s.substring(j, i))) {
+                dp[i] = true;
+                break;
+            }
+    return dp[n];
+}</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">def word_break(s, word_dict):
+    dict_ = set(word_dict)
+    n = len(s)
+    dp = [False] * (n + 1)
+    dp[0] = True                          # empty prefix
+    for i in range(1, n + 1):
+        for j in range(i):
+            if dp[j] and s[j:i] in dict_:
+                dp[i] = True
+                break
+    return dp[n]</code></pre></div>
+</div>
+<p class="tip"><b>Key insight:</b> "can this string be built from pieces" → prefix DP where <code class="inl">dp[i]</code> depends on an earlier true <code class="inl">dp[j]</code> plus a valid chunk <code class="inl">s[j..i)</code>. Put the dictionary in a hash set for O(1) lookups. The "return all sentences" variant switches to backtracking with memoization.</p>
+</section>
+
+<section id="p-minstack">
+<h2>Min Stack &nbsp;<span style="font-size:12px;color:#2bb673;font-weight:600">● Easy · design</span></h2>
+<p class="sub">Stack supporting push, pop, top, and <code class="inl">getMin</code> — all in O(1).</p>
+<p class="why"><span class="h">Approach</span>Keep a second stack of the running minimum that moves in lockstep: each entry records the min of the main stack up to that point. Pushing stores <code class="inl">min(x, currentMin)</code>; popping removes from both. <code class="inl">getMin</code> reads the top of the min stack. <b>Time O(1) per op, Space O(n).</b></p>
+<div class="row">
+  <div class="col java"><div class="lbl">JAVA</div>
+<pre><code class="language-java">class MinStack {
+    Deque&lt;Integer&gt; st = new ArrayDeque&lt;&gt;();
+    Deque&lt;Integer&gt; mins = new ArrayDeque&lt;&gt;();
+    public void push(int x) {
+        st.push(x);
+        mins.push(mins.isEmpty() ? x : Math.min(x, mins.peek()));
+    }
+    public void pop()    { st.pop(); mins.pop(); }
+    public int top()     { return st.peek(); }
+    public int getMin()  { return mins.peek(); }
+}</code></pre></div>
+  <div class="col py"><div class="lbl">PYTHON</div>
+<pre><code class="language-python">class MinStack:
+    def __init__(self):
+        self.st = []
+        self.mins = []                    # running minimum
+    def push(self, x):
+        self.st.append(x)
+        self.mins.append(min(x, self.mins[-1]) if self.mins else x)
+    def pop(self):
+        self.st.pop(); self.mins.pop()
+    def top(self):
+        return self.st[-1]
+    def getMin(self):
+        return self.mins[-1]</code></pre></div>
+</div>
+<p class="tip"><b>Key insight:</b> to expose an aggregate (min/max) in O(1) on a stack, carry it alongside each element in a parallel stack. The trick — store the running min <i>per level</i> — generalizes to any monotone aggregate and is the basis of "max stack" and "stack with increment."</p>
+</section>
+</main>
+</div>
+<script>
+hljs.highlightAll();
+
+// ---- Scrollspy: highlight the nav link of the section in view ----
+(function () {
+  var links = Array.prototype.slice.call(
+    document.querySelectorAll('nav.side a[href^="#"]'));
+  var map = {};
+  links.forEach(function (a) {
+    map[a.getAttribute('href').slice(1)] = a;
+  });
+  var sections = links
+    .map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); })
+    .filter(Boolean);
+
+  var current = null;
+  function setActive(id) {
+    if (id === current) return;
+    current = id;
+    links.forEach(function (a) { a.classList.remove('active'); });
+    if (map[id]) {
+      map[id].classList.add('active');
+      // keep the active link visible inside the scrolling sidebar
+      map[id].scrollIntoView({ block: 'nearest' });
+    }
+  }
+
+  if ('IntersectionObserver' in window) {
+    var visible = {};
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) visible[e.target.id] = e.intersectionRatio;
+        else delete visible[e.target.id];
+      });
+      // pick the visible section nearest the top (smallest index still showing)
+      var best = null, bestTop = Infinity;
+      Object.keys(visible).forEach(function (id) {
+        var top = document.getElementById(id).getBoundingClientRect().top;
+        if (top < bestTop) { bestTop = top; best = id; }
+      });
+      if (best) setActive(best);
+    }, { rootMargin: '-10% 0px -75% 0px', threshold: [0, 0.25, 0.5, 1] });
+    sections.forEach(function (s) { obs.observe(s); });
+  }
+
+  // Fallback + immediate update on scroll (covers fast scrolls / no IO)
+  function onScroll() {
+    var best = sections[0] ? sections[0].id : null, bestTop = -Infinity;
+    sections.forEach(function (s) {
+      var top = s.getBoundingClientRect().top;
+      if (top <= 120 && top > bestTop) { bestTop = top; best = s.id; }
+    });
+    if (best) setActive(best);
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('load', onScroll);
+  onScroll();
+})();
+</script>
+</body>
+</html>
